@@ -5,21 +5,14 @@ var img = new Image();
 let riversCoordinates = [];
 let mountainsCoordinates = [];
 
-// img.onload = function(){
-//     image.src = this.src;   
-// };
+let prevX = 0;
+let prevY = 0;
+
 ctx = document.getElementById('myCanvas').getContext("2d");
 img.src = "./images/mountains-trial.png";
 
 ctx.canvas.width = window.innerWidth * 0.95;
 ctx.canvas.height = window.innerHeight * 0.95;
-
-if (!Array.prototype.last) {
-    Array.prototype.last = function () {
-        return this[this.length - 1];
-    };
-};
-
 
 $('#myCanvas').mousedown(function (e) {
     mousePressed = true;
@@ -38,30 +31,6 @@ $('#myCanvas').mouseup(function (e) {
 $('#myCanvas').mouseleave(function (e) {
     mousePressed = false;
 });
-
-let activeTool = "rivers";
-let prevX = 0;
-let prevY = 0;
-
-$('#mountains-btn').click(function () {
-
-    activeTool = "mountains";
-
-});
-
-$('#rivers-btn').click(function () {
-    activeTool = "rivers";
-});
-
-$('#corrector-btn').click(function () {
-    activeTool = "corrector";
-});
-
-$('#eraser-btn').click(function () {
-    activeTool = "eraser";
-});
-
-
 
 function Draw(x, y, isDown) {
 
