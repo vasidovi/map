@@ -3,6 +3,7 @@ var lastX, lastY;
 var ctx;
 var img = new Image();
 let riversCoordinates = [];
+let mountainsCoordinates = [];
 
 // img.onload = function(){
 //     image.src = this.src;   
@@ -73,7 +74,8 @@ function Draw(x, y, isDown) {
     } else if (activeTool == "corrector") {
         correct(x, y, isDown);
     } else if ( activeTool =="eraser") {
-        undoRiver(x,y);
+        // undoRiver(x,y);
+        undoMountainRange(x,y);
     }
     ctx.restore();
 };
@@ -85,10 +87,16 @@ function drawMountains(x, y, isDown) {
 
         if (Math.abs(x - prevX) >= size || Math.abs(y - prevY) >= size) {
             ctx.drawImage(img, x - size / 2, y - size / 2, size, size);
+            mountainsCoordinates.last().push({
+                "x":  x - size / 2,
+                "y":  y - size / 2,
+                "size": size,
+            });
             prevX = x;
             prevY = y;
         }
     } else {
+        mountainsCoordinates.push([]);
         prevX = x;
         prevY = y;
     }
@@ -115,10 +123,26 @@ function correct(x, y, isDown) {
 function undoRiver(x, y) {
 
     let river = findRiver(x, y, riversCoordinates);
+    if (river != null) {
     riversCoordinates.splice(riversCoordinates.indexOf(river), 1);
+    redraw();
+    }
+}
+
+function undoMountainRange(x,y){
+    let mountainRange = findMountainRange(x, y, mountainsCoordinates);
+    if (mountainRange != null){
+        mountainsCoordinates.splice(mountainsCoordinates.indexOf(mountainRange), 1); 
+        redraw();   
+    }
+}
+
+function redraw(){
     clearArea();
     redrawRivers(riversCoordinates);
+    redrawMountains(mountainsCoordinates);
 }
+
 
 function redrawRivers(riversCoordinates){
     if (riversCoordinates.length > 0) {
