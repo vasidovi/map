@@ -33,24 +33,29 @@ $('#myCanvas').mouseleave(function (e) {
     mousePressed = false;
 });
 
-let activeTool = "rivers";
 let prevX = 0;
 let prevY = 0;
 
+function setActiveTool(toolName, button) {
+    activeTool = toolName;
+    $('.tool-button').removeClass('selected');
+    button.addClass('selected');
+}
+
 $('#mountains-btn').click(function () {
-
-    activeTool = "mountains";
-
+    setActiveTool("mountains", $(this))
 });
 
 $('#rivers-btn').click(function () {
-    activeTool = "rivers";
+    setActiveTool("rivers", $(this))
 });
 
 $('#corrector-btn').click(function () {
-    activeTool = "corrector";
+    setActiveTool("corrector", $(this))
 });
 
+let activeTool;
+$('#rivers-btn').click();
 
 function Draw(x, y, isDown) {
 
@@ -87,16 +92,16 @@ function correct(x, y, isDown) {
 
     if (isDown) {
 
-            ctx.beginPath();
-            ctx.strokeStyle = "#fff";
-            ctx.lineWidth = size;
-            ctx.lineJoin = "round";
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(x, y);
+        ctx.beginPath();
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = size;
+        ctx.lineJoin = "round";
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
 
-            ctx.closePath();
-            ctx.stroke();
-        }
+        ctx.closePath();
+        ctx.stroke();
+    }
     lastX = x;
     lastY = y;
 }
