@@ -33,42 +33,99 @@ $('#myCanvas').mouseleave(function (e) {
     mousePressed = false;
 });
 
-const size = 35;
-const distortion = 1.75;
+let activeTool = "rivers";
 let prevX = 0;
 let prevY = 0;
 
+$('#mountains-btn').click(function () {
+
+    activeTool = "mountains";
+
+});
+
+$('#rivers-btn').click(function () {
+    activeTool = "rivers";
+});
+
+$('#corrector-btn').click(function () {
+    activeTool = "corrector";
+});
+
+
 function Draw(x, y, isDown) {
-    
+
+    if (activeTool == "mountains") {
+        drawMountains(x, y, isDown);
+    } else if (activeTool == "rivers") {
+        drawRivers(x, y, isDown);
+    } else if (activeTool == "corrector") {
+        correct(x, y, isDown);
+    }
+};
+
+
+function drawMountains(x, y, isDown) {
+    const size = 35;
+
     if (isDown) {
 
-        // if (Math.abs(x - prevX) >= size || Math.abs(y - prevY) >= size) {
-        //     ctx.beginPath();
-        //     // // ctx.strokeStyle = ;
-        //     // // ctx.lineWidth = $('#selWidth').val();
-        //     ctx.lineJoin = "round";
-        //     ctx.moveTo(prevX, prevY);
-        //     prevX = x + (Math.random()-0.5) * Math.abs(prevX-x)*distortion;
-        //     console.log(Math.abs(prevX-x)*distortion);
-        //     prevY = y + (Math.random()-0.5) * Math.abs(prevY-y)*distortion;
-        //     ctx.lineTo(prevX, prevY);
-
-        //     ctx.closePath();
-        //     ctx.stroke();
-        // }
-
-        // /* Mountain drawing 
-        
-        if ( Math.abs(x- prevX) >= size || Math.abs(y - prevY) >= size){
-        ctx.drawImage(img,x-size/2,y-size/2,size,size);
-        prevX = x;
-        prevY = y;
+        if (Math.abs(x - prevX) >= size || Math.abs(y - prevY) >= size) {
+            ctx.drawImage(img, x - size / 2, y - size / 2, size, size);
+            prevX = x;
+            prevY = y;
         }
-        
-        // */
     } else {
         prevX = x;
-    prevY = y;
+        prevY = y;
+    }
+    lastX = x;
+    lastY = y;
+}
+
+function correct(x, y, isDown) {
+    const size = 20;
+
+    if (isDown) {
+
+            ctx.beginPath();
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth = size;
+            ctx.lineJoin = "round";
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+
+            ctx.closePath();
+            ctx.stroke();
+        }
+    lastX = x;
+    lastY = y;
+}
+
+
+function drawRivers(x, y, isDown) {
+    const size = 3;
+    const distortion = 1.75;
+
+    if (isDown) {
+
+        if (Math.abs(x - prevX) >= size || Math.abs(y - prevY) >= size) {
+            ctx.beginPath();
+            // // ctx.strokeStyle = ;
+            // // ctx.lineWidth = $('#selWidth').val();
+            ctx.lineJoin = "round";
+            ctx.moveTo(prevX, prevY);
+            prevX = x + (Math.random() - 0.5) * Math.abs(prevX - x) * distortion;
+            console.log(Math.abs(prevX - x) * distortion);
+            prevY = y + (Math.random() - 0.5) * Math.abs(prevY - y) * distortion;
+            ctx.lineTo(prevX, prevY);
+
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+    } else {
+        prevX = x;
+        prevY = y;
     }
     lastX = x;
     lastY = y;
