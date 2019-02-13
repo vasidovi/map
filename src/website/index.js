@@ -192,6 +192,7 @@ function eraseElementGroup(x, y, elementGroups) {
 }
 
 function redraw() {
+    console.log(rivers);
     clearArea();
     redrawRivers(rivers);
     redrawMountains(mountainRanges);

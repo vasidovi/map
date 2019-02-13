@@ -28,7 +28,7 @@ function saveMap() {
 function loadMap() {
 
     $.ajax({
-        url: routes.map + '?_='+ $.now(),
+        url: routes.map,
         type: "GET",
         success: function (response) {
             const string = JSON.stringify(response);
@@ -37,6 +37,7 @@ function loadMap() {
 
             rivers = parsed.rivers || [];
             mountainRanges = parsed.mountainRanges || [];
+            console.log(mountainRanges)
             redraw();
         },
         error: function (_, status) {

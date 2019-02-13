@@ -13,15 +13,27 @@ class Resources {
         return loadedImages;
     }
 
-    static load(key) {
+    static load(key, callback) {
         let image = this.loadedImages[key];
+
         if (!image) {
             image = new Image();
+            image.onload = () => {
+                console.log('loaded')
+                loadedImages[key] = image;
+                callback(image);
+            };
             image.src = this.sources[key];
-            loadedImages[key] = image;
+        } else {
+            callback(image);
         }
-        return image;
     }
+}
+
+function loadImage(url) {
+    let i = new Image();
+    i.src = url;
+    return i;
 }
 
 Object.keys(sources).forEach(k => {
@@ -29,9 +41,5 @@ Object.keys(sources).forEach(k => {
 
         // route to local path for no-server testing
         sources[k] = "../../res" + sources[k]
-    } else {
-
-        // shouldn't draw before loaded, thats why we preload
-        Resources.load(k)
     }
 })
