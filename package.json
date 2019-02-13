@@ -2,9 +2,9 @@
   "name": "map",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/webservice/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/vasidovi/map/issues"
   },
-  "homepage": "https://github.com/vasidovi/map#readme"
+  "homepage": "https://github.com/vasidovi/map#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "node-persist": "^3.0.4"
+  }
 }

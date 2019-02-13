@@ -4,6 +4,7 @@ var ctx;
 var img = new Image();
 let rivers = [];
 const mountainRanges = [];
+let activeTool;
 
 let prevX = 0;
 let prevY = 0;
@@ -203,4 +204,8 @@ function clearArea() {
     // Use the identity matrix while clearing the canvas
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+}
+
+function undoLastAction(){
+    
 }
