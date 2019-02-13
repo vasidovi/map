@@ -74,12 +74,12 @@ function drawMountains(x, y, isDown) {
 }
 
 function redrawMountains(mountainsCoordinates) {
-    
+
     for (let i = 0; i < mountainsCoordinates.length; i++) {
         let mountainRange = mountainsCoordinates[i];
         for (let j = 1; j < mountainRange.length - 1; j++) {
-            ctx.drawImage(img, mountainRange[j].x, mountainRange[j].y, 
-                mountainRange[j].size,  mountainRange[j].size);
+            ctx.drawImage(img, mountainRange[j].x, mountainRange[j].y,
+                mountainRange[j].size, mountainRange[j].size);
         }
     }
 }
@@ -168,6 +168,7 @@ function redrawRivers(riversCoordinates) {
             ctx.moveTo(startX, startY);
             ctx.lineTo(endX, endY);
             ctx.stroke();
+
         }
     }
 }

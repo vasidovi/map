@@ -1,0 +1,3 @@
+class Mountain extends Element {
+    
+}

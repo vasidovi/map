@@ -1,0 +1,2 @@
+class MountainRange extends ElementGroup {
+}
