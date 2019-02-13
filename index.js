@@ -41,8 +41,8 @@ function Draw(x, y, isDown) {
         drawRivers(x, y, isDown);
     } else if (activeTool == "corrector") {
         correct(x, y, isDown);
-    } else if ( activeTool =="eraser") {
-        undoRiver(x,y);
+    } else if (activeTool == "eraser") {
+        undoRiver(x, y);
     }
     ctx.restore();
 };
@@ -89,26 +89,26 @@ function undoRiver(x, y) {
     redrawRivers(riversCoordinates);
 }
 
-function redrawRivers(riversCoordinates){
+function redrawRivers(riversCoordinates) {
     if (riversCoordinates.length > 0) {
         // iterate through all the rivers
         for (let i = 0; i < riversCoordinates.length; i++) {
             let river = riversCoordinates[i];
-            for (let j = 1; j < river.length-1; j++) {           
-            const startX = river[j-1].x;
-            const startY = river[j-1].y;
-            const endX = river[j].x;
-            const endY = river[j].y;
-            ctx.beginPath();
-            ctx.strokeStyle = "#000";
-            // ctx.lineWidth = size;
-            ctx.lineJoin = "round";
-            ctx.moveTo(startX, startY);
-            ctx.lineTo(endX, endY);
-            ctx.stroke();
+            for (let j = 1; j < river.length - 1; j++) {
+                const startX = river[j - 1].x;
+                const startY = river[j - 1].y;
+                const endX = river[j].x;
+                const endY = river[j].y;
+                ctx.beginPath();
+                ctx.strokeStyle = "#000";
+                // ctx.lineWidth = size;
+                ctx.lineJoin = "round";
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
             }
         }
-    }         
+    }
 }
 
 function findRiver(x, y, riversCoordinates) {
@@ -169,6 +169,3 @@ function clearArea() {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
-
-const element = new Element(1, 1);
-console.log(element.x);
