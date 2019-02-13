@@ -5,6 +5,11 @@ const data = {
             src: 'https://cdn2.iconfinder.com/data/icons/toolbar-icons/512/Undo_Arrow-512.png',
             action: undoLastAction
         }, {
+            name: 'save',
+            title: 'Save',
+            src: 'https://cdn3.iconfinder.com/data/icons/vector-icons-for-mobile-apps-2/512/Save_black-512.png',
+            action: saveMap
+        }, {
             name: 'mountains',
             title: 'Mountains',
             src: 'https://cdn3.iconfinder.com/data/icons/pyconic-icons-1-2/512/mountain-512.png'
@@ -36,7 +41,7 @@ const data = {
     }
 }
 
-data.setActiveTool(data.tools[1]);
+data.setActiveTool(data.tools.find(e => e.name === "rivers"));
 
 const app = new Vue({
     el: "#tools",

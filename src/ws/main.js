@@ -7,6 +7,8 @@ const app = express()
 const port = 3000
 
 app.use(bodyParser.json());
+app.use('/images', express.static('res/images'));
+app.use('/', express.static('src/website'));
 
 const asyncMiddleware = fn =>
     (req, res, next) => {
@@ -19,7 +21,6 @@ app.get('/map', asyncMiddleware(async (req, res, next) => {
 }))
 
 app.post('/map', asyncMiddleware(async (req, res, next) => {
-    console.log(req.body);
     await storage.set('map', req.body)
     res.sendStatus(201);
 }))

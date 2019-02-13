@@ -3,7 +3,7 @@ var lastX, lastY;
 var ctx;
 let activeTool;
 let rivers = [];
-const mountainRanges = [];
+let mountainRanges = [];
 const history = [];
 let prevX = 0;
 let prevY = 0;
