@@ -2,8 +2,8 @@ var mousePressed = false;
 var lastX, lastY;
 var ctx;
 var img = new Image();
-let riversCoordinates = [];
-let mountainsCoordinates = [];
+let rivers = [];
+const mountainRanges = [];
 
 let prevX = 0;
 let prevY = 0;
@@ -44,7 +44,7 @@ function Draw(x, y, isDown) {
         correct(x, y, isDown);
     } else if (activeTool == "eraser") {
         // undoRiverPart(x, y);
-        undoMountain(x, y);
+        undoRiverPart(x, y);
     }
     ctx.restore();
 };
@@ -56,16 +56,13 @@ function drawMountains(x, y, isDown) {
 
         if (Math.abs(x - prevX) >= size || Math.abs(y - prevY) >= size) {
             ctx.drawImage(img, x - size / 2, y - size / 2, size, size);
-            mountainsCoordinates.last().push({
-                "x": x - size / 2,
-                "y": y - size / 2,
-                "size": size,
-            });
+            mountainRanges.last().elements.push(
+                new Mountain(x - size / 2, y - size / 2, size));
             prevX = x;
             prevY = y;
         }
     } else {
-        mountainsCoordinates.push([]);
+        mountainRanges.push(new MountainRange());
         prevX = x;
         prevY = y;
     }
@@ -73,13 +70,14 @@ function drawMountains(x, y, isDown) {
     lastY = y;
 }
 
-function redrawMountains(mountainsCoordinates) {
+function redrawMountains(mountainRanges) {
 
-    for (let i = 0; i < mountainsCoordinates.length; i++) {
-        let mountainRange = mountainsCoordinates[i];
-        for (let j = 1; j < mountainRange.length - 1; j++) {
-            ctx.drawImage(img, mountainRange[j].x, mountainRange[j].y,
-                mountainRange[j].size, mountainRange[j].size);
+    for (let i = 0; i < mountainRanges.length; i++) {
+        let mountainRange = mountainRanges[i];
+        let mountains = mountainRange.elements;
+        for (let j = 0; j < mountains.length; j++) {
+            ctx.drawImage(img, mountains[j].x, mountains[j].y,
+                mountains[j].size, mountains[j].size);
         }
     }
 }
@@ -102,68 +100,58 @@ function correct(x, y, isDown) {
 }
 
 function undoRiverPart(x, y) {
-    undoElement(x, y, riversCoordinates);
+    undoElement(x, y, rivers);
 }
 
 function undoRiver(x, y) {
-    undoElementGroup(x, y, riversCoordinates);
+    undoElementGroup(x, y, rivers);
 }
 
 function undoMountain(x, y) {
-    undoElement(x, y, mountainsCoordinates);
+    undoElement(x, y, mountainRanges);
 }
 
 function undoMountainRange(x, y) {
-    undoElementGroup(x, y, mountainsCoordinates);
+    undoElementGroup(x, y, mountainRanges);
 }
 
-function undoElement(x, y, elementGroupsCoordinates) {
-    let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroupsCoordinates);
+function undoElement(x, y, elementGroups) {
+    let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroups);
     if (elementGroupAndElement != null) {
-        let elementGroupIndex = elementGroupsCoordinates.indexOf(elementGroupAndElement[0]);
-        let elementGroup = elementGroupsCoordinates[elementGroupIndex];
-        let elementIndex = elementGroup.indexOf(elementGroupAndElement[1]);
-        elementGroup.splice(elementIndex, 1);
+        let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
+        let elementGroup = elementGroups[elementGroupIndex];
+        let elementIndex = elementGroup.elements.indexOf(elementGroupAndElement[1]);
+        elementGroup.elements.splice(elementIndex, 1);
         redraw();
     }
 }
 
-function undoElementGroup(x, y, elementGroupsCoordinates) {
+function undoElementGroup(x, y, elementGroups) {
 
-    let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroupsCoordinates);
+    let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroups);
     if (elementGroupAndElement != null) {
-        let elementGroupIndex = elementGroupsCoordinates.indexOf(elementGroupAndElement[0]);
-        elementGroupsCoordinates.splice(elementGroupIndex, 1);
-        redraw();
-    }
-}
-
-function undoMountainRange(x, y) {
-    let mountainRange = findMountainRange(x, y, mountainsCoordinates);
-    if (mountainRange != null) {
-        mountainsCoordinates.splice(mountainsCoordinates.indexOf(mountainRange), 1);
+        let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
+        elementGroups.splice(elementGroupIndex, 1);
         redraw();
     }
 }
 
 function redraw() {
     clearArea();
-    redrawRivers(riversCoordinates);
-    redrawMountains(mountainsCoordinates);
+    redrawRivers(rivers);
+    redrawMountains(mountainRanges);
 }
 
-function redrawRivers(riversCoordinates) {
-    // iterate through all the rivers
-    for (let i = 0; i < riversCoordinates.length; i++) {
-        let river = riversCoordinates[i];
-        for (let j = 1; j < river.length - 1; j++) {
-            const startX = river[j - 1].x;
-            const startY = river[j - 1].y;
-            const endX = river[j].x;
-            const endY = river[j].y;
+function redrawRivers(rivers) {
+    for (let i = 0; i < rivers.length; i++) {
+        let riverParts = rivers[i].elements;
+        for (let j = 1; j < riverParts.length - 1; j++) {
+            const startX = riverParts[j - 1].x;
+            const startY = riverParts[j - 1].y;
+            const endX = riverParts[j].x;
+            const endY = riverParts[j].y;
             ctx.beginPath();
             ctx.strokeStyle = "#000";
-            // ctx.lineWidth = size;
             ctx.lineJoin = "round";
             ctx.moveTo(startX, startY);
             ctx.lineTo(endX, endY);
@@ -174,25 +162,26 @@ function redrawRivers(riversCoordinates) {
 }
 
 
-function findElementGroupAndElement(x, y, elementGroupsCoordinates) {
+function findElementGroupAndElement(x, y, elementGroups) {
 
-    if (elementGroupsCoordinates.length > 0) {
-        let foundElementGroup = elementGroupsCoordinates.find(function (element) {
-            return element.length > 0;
+    if (elementGroups.length > 0) {
+        let foundElementGroup = elementGroups.find(function (group) {
+            return group.elements.length > 0;
         });
         if (!foundElementGroup) {
             return null;
         }
-        let foundElement = foundElementGroup[0];
+        let foundElement = foundElementGroup.elements[0];
         let minDifference = Math.abs(x - foundElement.x) + Math.abs(y - foundElement.y);
-        for (let i = 0; i < elementGroupsCoordinates.length; i++) {
-            let elementGroup = elementGroupsCoordinates[i];
-            for (let j = 0; j < elementGroup.length; j++) {
-                const difference = Math.abs(x - elementGroup[j].x) + Math.abs(y - elementGroup[j].y);
+        for (let i = 0; i < elementGroups.length; i++) {
+            let elementGroup = elementGroups[i];
+            let elements = elementGroup.elements;
+            for (let j = 0; j < elements.length; j++) {
+                const difference = Math.abs(x - elements[j].x) + Math.abs(y - elements[j].y);
                 if (difference < minDifference) {
                     minDifference = difference;
                     foundElementGroup = elementGroup;
-                    foundElement = elementGroup[j];
+                    foundElement = elements[j];
                 }
             }
         }
@@ -201,6 +190,7 @@ function findElementGroupAndElement(x, y, elementGroupsCoordinates) {
         return null;
     }
 }
+
 
 function drawRivers(x, y, isDown) {
     const size = 3;
@@ -212,10 +202,7 @@ function drawRivers(x, y, isDown) {
             ctx.beginPath();
             ctx.lineJoin = "round";
             ctx.moveTo(prevX, prevY);
-            riversCoordinates.last().push({
-                "x": prevX,
-                "y": prevY
-            });
+            rivers.last().elements.push( new RiverPart(prevX, prevY));
             prevX = x + (Math.random() - 0.5) * Math.abs(prevX - x) * distortion;
             prevY = y + (Math.random() - 0.5) * Math.abs(prevY - y) * distortion;
             ctx.lineTo(prevX, prevY);
@@ -223,7 +210,7 @@ function drawRivers(x, y, isDown) {
         }
 
     } else {
-        riversCoordinates.push([]);
+        rivers.push( new River());
         prevX = x;
         prevY = y;
     }
