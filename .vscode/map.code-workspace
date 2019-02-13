@@ -1,8 +1,11 @@
 {
-	"folders": [
-		{
-			"path": "D:\\repos\\map"
+	"folders": [{
+		"path": ".."
+	}],
+	"settings": {
+		"files.exclude": {
+			"package-lock.json": true,
+			"node_modules/": true
 		}
-	],
-	"settings": {}
+	}
 }

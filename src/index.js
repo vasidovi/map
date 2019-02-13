@@ -1,11 +1,10 @@
 var mousePressed = false;
 var lastX, lastY;
 var ctx;
-let activeTool = "rivers";
+let activeTool;
 let rivers = [];
 const mountainRanges = [];
 const history = [];
-
 let prevX = 0;
 let prevY = 0;
 
