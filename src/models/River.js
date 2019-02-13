@@ -1,4 +1,9 @@
 class River extends ElementGroup {
+
+    get elementType() {
+        return "river";
+    }
+
     constructor(elements, branches) {
         super(elements);
         this.branches = branches || [];
