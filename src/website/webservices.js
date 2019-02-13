@@ -35,8 +35,8 @@ function loadMap() {
 
             var parsed = deserialize(string)
 
-            rivers = parsed.rivers;
-            mountainRanges = parsed.mountainRanges;
+            rivers = parsed.rivers || [];
+            mountainRanges = parsed.mountainRanges || [];
             redraw();
         },
         error: function (_, status) {
