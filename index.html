@@ -12,9 +12,13 @@
             Your browser does not support the HTML5 canvas tag.
         </canvas>
         <div class="tool-button-container">
-            <button v-for="tool in tools" :id="tool.name + '-btn'" class="tool-button" :title="tool.title" v-bind:class="{ active: tool.isActive }"
-                v-on:click="setActiveTool(tool)">
-                <img :src="tool.src" />
+            <button v-for="tool in tools" 
+            :id="tool.name + '-btn'" 
+            class="tool-button" 
+            :title="tool.title" 
+            v-bind:class="{active: tool.isActive}"
+            v-on:click="setActiveTool(tool)">
+            <img :src="tool.src" />
             </button>
         </div>
     </div>
