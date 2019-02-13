@@ -19,7 +19,6 @@ class Resources {
         if (!image) {
             image = new Image();
             image.onload = () => {
-                console.log('loaded')
                 loadedImages[key] = image;
                 callback(image);
             };

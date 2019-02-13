@@ -165,6 +165,17 @@ function eraseElement(x, y, elementGroups) {
         let elementGroup = elementGroups[elementGroupIndex];
         let elementIndex = elementGroup.elements.indexOf(elementGroupAndElement[1]);
         elementGroup.elements.splice(elementIndex, 1);
+        if (elementGroup.elements.length === 0) {
+            // to deal with empty rivers, quick fix
+            let index = mountainRanges.indexOf(elementGroupAndElement[0]);
+            if (index !== -1) {
+                mountainRanges.splice(index, 1);
+            } else {
+                index = rivers.indexOf(elementGroupAndElement[0]);
+                rivers.splice(index, 1);
+            }
+
+        }
         redraw();
 
         // to redo, quick fix
@@ -192,7 +203,6 @@ function eraseElementGroup(x, y, elementGroups) {
 }
 
 function redraw() {
-    console.log(rivers);
     clearArea();
     redrawRivers(rivers);
     redrawMountains(mountainRanges);

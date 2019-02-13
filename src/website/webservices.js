@@ -37,7 +37,7 @@ function loadMap() {
 
             rivers = parsed.rivers || [];
             mountainRanges = parsed.mountainRanges || [];
-            console.log(mountainRanges)
+            
             redraw();
         },
         error: function (_, status) {
