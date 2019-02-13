@@ -1,16 +1,14 @@
 var mousePressed = false;
 var lastX, lastY;
 var ctx;
-var img = new Image();
+let activeTool;
 let rivers = [];
 let mountainRanges = [];
-let activeTool;
-
+const history = [];
 let prevX = 0;
 let prevY = 0;
 
 ctx = document.getElementById('myCanvas').getContext("2d");
-img.src = "../res/images/mountains-trial.png";
 
 ctx.canvas.width = window.innerWidth * 0.95;
 ctx.canvas.height = window.innerHeight * 0.95;
@@ -36,7 +34,7 @@ $('#myCanvas').mouseleave(function (e) {
 function Draw(x, y, isDown) {
 
     ctx.save();
-
+    // console.log( "we are in draw" + activeTool);
     if (activeTool == "mountains") {
         drawMountains(x, y, isDown);
     } else if (activeTool == "rivers") {
@@ -44,10 +42,43 @@ function Draw(x, y, isDown) {
     } else if (activeTool == "corrector") {
         correct(x, y, isDown);
     } else if (activeTool == "eraser") {
-        undoRiverPart(x, y);
-        //undoMountain(x, y);
+        undoElement(x, y, [...rivers, ...mountainRanges]);
     }
+    // updateHistory(activeTool);
     ctx.restore();
+};
+
+function undoLastAction() {
+    if (history.length > 0) {
+        const lastEntry = history.last();
+        console.log(lastEntry);
+        if (lastEntry.action == "added") {
+            if (lastEntry.type == "mountainRange") {
+                mountainRanges.pop();
+            } else if (lastEntry.type == "river") {
+                rivers.pop();
+            }
+        } else if (lastEntry.action == "removed") {
+            if (lastEntry.type == "mountainRange") {
+                if (lastEntry.scope == "group") {
+                    mountainRanges.push(lastEntry.groupValue);
+                } else if (lastEntry.scope == "element") {
+                    console.log(mountainRanges)
+                    const mountainRange = mountainRanges[lastEntry.groupIndex];
+                    mountainRange.elements.splice(lastEntry.elementIndex, 0, lastEntry.elementValue);
+                }
+            } else if (lastEntry.type == "river") {
+                if (lastEntry.scope == "group") {
+                    rivers.push(lastEntry.groupValue);
+                } else if (lastEntry.scope == "element") {
+                    const river = rivers[lastEntry.groupIndex];
+                    river.elements.splice(lastEntry.elementIndex, 0, lastEntry.elementValue);
+                }
+            }
+        }
+        history.pop();
+        redraw();
+    }
 };
 
 function drawMountains(x, y, isDown) {
@@ -63,6 +94,10 @@ function drawMountains(x, y, isDown) {
         }
     } else {
         mountainRanges.push(new MountainRange());
+        const historyEntry = {};
+        historyEntry.action = "added";
+        historyEntry.type = "mountainRange";
+        history.push(historyEntry);
         prevX = x;
         prevY = y;
     }
@@ -96,19 +131,32 @@ function correct(x, y, isDown) {
 }
 
 function undoRiverPart(x, y) {
-    undoElement(x, y, rivers);
+    undoElement(x, y, rivers, "river");
 }
 
 function undoRiver(x, y) {
-    undoElementGroup(x, y, rivers);
+    undoElementGroup(x, y, rivers, "river");
 }
 
 function undoMountain(x, y) {
-    undoElement(x, y, mountainRanges);
+    undoElement(x, y, mountainRanges, "mountainRange");
+
 }
 
 function undoMountainRange(x, y) {
-    undoElementGroup(x, y, mountainRanges);
+    undoElementGroup(x, y, mountainRanges, "mountainRange");
+}
+
+function saveRemovalHistory(type, scope, groupIndex, groupValue, elementIndex, elementValue) {
+    const historyEntry = {};
+    historyEntry.type = type;
+    historyEntry.action = "removed";
+    historyEntry.scope = scope;
+    historyEntry.groupIndex = groupIndex;
+    historyEntry.groupValue = groupValue;
+    historyEntry.elementIndex = elementIndex;
+    historyEntry.elementValue = elementValue;
+    history.push(historyEntry);
 }
 
 function undoElement(x, y, elementGroups) {
@@ -119,6 +167,16 @@ function undoElement(x, y, elementGroups) {
         let elementIndex = elementGroup.elements.indexOf(elementGroupAndElement[1]);
         elementGroup.elements.splice(elementIndex, 1);
         redraw();
+
+        // to redo, quick fix
+        elementGroupIndex = mountainRanges.indexOf(elementGroupAndElement[0]);
+        if (elementGroupIndex == -1) {
+            elementGroupIndex = rivers.indexOf(elementGroupAndElement[0]);
+        }
+
+        saveRemovalHistory(elementGroup.elementType, "element",
+            elementGroupIndex, elementGroupAndElement[0],
+            elementIndex, elementGroupAndElement[1]);
     }
 }
 
@@ -129,6 +187,8 @@ function undoElementGroup(x, y, elementGroups) {
         let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
         elementGroups.splice(elementGroupIndex, 1);
         redraw();
+        saveRemovalHistory(elementGroup.elementType, "group",
+            elementGroupIndex, elementGroupAndElement[0]);
     }
 }
 
@@ -167,7 +227,7 @@ function findElementGroupAndElement(x, y, elementGroups) {
                 }
             }
         }
-        return [foundElementGroup, foundElement];
+        return [foundElementGroup, foundElement, minDifference];
     } else {
         return null;
     }
@@ -187,12 +247,16 @@ function drawRivers(x, y, isDown) {
             prevX = x + (Math.random() - 0.5) * Math.abs(prevX - x) * distortion;
             prevY = y + (Math.random() - 0.5) * Math.abs(prevY - y) * distortion;
             ctx.lineTo(prevX, prevY);
-            rivers.last().elements.push( new RiverPart(prevX, prevY));
+            rivers.last().elements.push(new RiverPart(prevX, prevY));
             ctx.stroke();
         }
 
     } else {
-        rivers.push( new River([new RiverPart(x,y)]));
+        rivers.push(new River([new RiverPart(x, y)]));
+        const historyEntry = {};
+        historyEntry.action = "added";
+        historyEntry.type = "river";
+        history.push(historyEntry);
         prevX = x;
         prevY = y;
     }
@@ -204,8 +268,4 @@ function clearArea() {
     // Use the identity matrix while clearing the canvas
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-}
-
-function undoLastAction(){
-    
 }
