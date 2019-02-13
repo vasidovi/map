@@ -42,7 +42,7 @@ function Draw(x, y, isDown) {
     } else if (activeTool == "corrector") {
         correct(x, y, isDown);
     } else if (activeTool == "eraser") {
-        undoElement(x, y, [...rivers, ...mountainRanges]);
+        eraseElement(x, y, [...rivers, ...mountainRanges]);
     }
     // updateHistory(activeTool);
     ctx.restore();
@@ -130,24 +130,23 @@ function correct(x, y, isDown) {
     lastY = y;
 }
 
-function undoRiverPart(x, y) {
-    undoElement(x, y, rivers, "river");
+function eraseRiverPart(x, y) {
+    eraseElement(x, y, rivers, "river");
 }
 
-function undoRiver(x, y) {
-    undoElementGroup(x, y, rivers, "river");
+function eraseRiver(x, y) {
+    eraseElementGroup(x, y, rivers, "river");
 }
 
-function undoMountain(x, y) {
-    undoElement(x, y, mountainRanges, "mountainRange");
-
+function eraseMountain(x, y) {
+    eraseElement(x, y, mountainRanges, "mountainRange");
 }
 
-function undoMountainRange(x, y) {
-    undoElementGroup(x, y, mountainRanges, "mountainRange");
+function eraseMountainRange(x, y) {
+    eraseElementGroup(x, y, mountainRanges, "mountainRange");
 }
 
-function saveRemovalHistory(type, scope, groupIndex, groupValue, elementIndex, elementValue) {
+function saveErasingHistory(type, scope, groupIndex, groupValue, elementIndex, elementValue) {
     const historyEntry = {};
     historyEntry.type = type;
     historyEntry.action = "removed";
@@ -159,7 +158,7 @@ function saveRemovalHistory(type, scope, groupIndex, groupValue, elementIndex, e
     history.push(historyEntry);
 }
 
-function undoElement(x, y, elementGroups) {
+function eraseElement(x, y, elementGroups) {
     let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroups);
     if (elementGroupAndElement != null) {
         let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
@@ -173,21 +172,21 @@ function undoElement(x, y, elementGroups) {
         if ( elementGroupIndex == -1){
             elementGroupIndex = rivers.indexOf(elementGroupAndElement[0]);
         }
-
-        saveRemovalHistory(elementGroup.elementType, "element",
+        
+        saveErasingHistory(elementGroup.elementType, "element",
             elementGroupIndex, elementGroupAndElement[0],
             elementIndex, elementGroupAndElement[1]);
     }
 }
 
-function undoElementGroup(x, y, elementGroups) {
+function eraseElementGroup(x, y, elementGroups) {
 
     let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroups);
     if (elementGroupAndElement != null) {
         let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
         elementGroups.splice(elementGroupIndex, 1);
         redraw();
-        saveRemovalHistory(elementGroup.elementType, "group",
+        saveErasingHistory(elementGroup.elementType, "group",
             elementGroupIndex, elementGroupAndElement[0]);
     }
 }
