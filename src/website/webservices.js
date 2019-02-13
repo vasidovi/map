@@ -28,7 +28,7 @@ function saveMap() {
 function loadMap() {
 
     $.ajax({
-        url: routes.map,
+        url: routes.map + '?_='+ $.now(),
         type: "GET",
         success: function (response) {
             const string = JSON.stringify(response);
