@@ -12,22 +12,15 @@
             Your browser does not support the HTML5 canvas tag.
         </canvas>
         <div class="tool-button-container">
-            <button id="mountains-btn" class="tool-button" title="Mountains">
-                <img src="https://cdn3.iconfinder.com/data/icons/pyconic-icons-1-2/512/mountain-512.png" />
-            </button>
-            <button id="rivers-btn" class="tool-button" title="Rivers">
-                <img src="https://cdn0.iconfinder.com/data/icons/energy-and-power-3/512/131-512.png" />
-            </button>
-            <button id="corrector-btn" class="tool-button" title="Corrector">
-                <img src="https://static.thenounproject.com/png/62595-200.png" />
-            </button>
-            <button id="eraser-btn" class="tool-button" title="Eraser">
-                <img src="https://cdn3.iconfinder.com/data/icons/text/100/eraser-512.png" />
+            <button v-for="tool in tools" :id="tool.name + '-btn'" class="tool-button" :title="tool.title" v-bind:class="{ active: tool.isActive }"
+                v-on:click="setActiveTool(tool)">
+                <img :src="tool.src" />
             </button>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/vue"></script>
     <script src="./extensions.js"></script>
     <script src="./tools.js"></script>
     <script src="./index.js"></script>
