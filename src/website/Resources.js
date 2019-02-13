@@ -28,7 +28,7 @@ Object.keys(sources).forEach(k => {
     if (!document.location.hostname) {
 
         // route to local path for no-server testing
-        sources[k] = "../res" + sources[k]
+        sources[k] = "../../res" + sources[k]
     } else {
 
         // shouldn't draw before loaded, thats why we preload
