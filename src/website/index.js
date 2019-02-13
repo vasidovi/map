@@ -15,12 +15,12 @@ ctx.canvas.height = window.innerHeight * 0.95;
 
 $('#myCanvas').mousedown(function (e) {
     mousePressed = true;
-    Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false);
+    useTool(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false);
 });
 
 $('#myCanvas').mousemove(function (e) {
     if (mousePressed) {
-        Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true);
+        useTool(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true);
     }
 });
 
@@ -31,18 +31,18 @@ $('#myCanvas').mouseleave(function (e) {
     mousePressed = false;
 });
 
-function Draw(x, y, isDown) {
+function useTool(x, y, isDown) {
 
     ctx.save();
     // console.log( "we are in draw" + activeTool);
     if (activeTool == "mountains") {
-        drawMountains(x, y, isDown);
+        formMountains(x, y, isDown);
     } else if (activeTool == "rivers") {
-        drawRivers(x, y, isDown);
+        formRivers(x, y, isDown);
     } else if (activeTool == "corrector") {
         correct(x, y, isDown);
     } else if (activeTool == "eraser") {
-        undoElement(x, y, [...rivers, ...mountainRanges]);
+        eraseElement(x, y, [...rivers, ...mountainRanges]);
     }
     // updateHistory(activeTool);
     ctx.restore();
@@ -81,7 +81,7 @@ function undoLastAction() {
     }
 };
 
-function drawMountains(x, y, isDown) {
+function formMountains(x, y, isDown) {
     const size = 35;
 
     if (isDown) {
@@ -130,24 +130,23 @@ function correct(x, y, isDown) {
     lastY = y;
 }
 
-function undoRiverPart(x, y) {
-    undoElement(x, y, rivers, "river");
+function eraseRiverPart(x, y) {
+    eraseElement(x, y, rivers, "river");
 }
 
-function undoRiver(x, y) {
-    undoElementGroup(x, y, rivers, "river");
+function eraseRiver(x, y) {
+    eraseElementGroup(x, y, rivers, "river");
 }
 
-function undoMountain(x, y) {
-    undoElement(x, y, mountainRanges, "mountainRange");
-
+function eraseMountain(x, y) {
+    eraseElement(x, y, mountainRanges, "mountainRange");
 }
 
-function undoMountainRange(x, y) {
-    undoElementGroup(x, y, mountainRanges, "mountainRange");
+function eraseMountainRange(x, y) {
+    eraseElementGroup(x, y, mountainRanges, "mountainRange");
 }
 
-function saveRemovalHistory(type, scope, groupIndex, groupValue, elementIndex, elementValue) {
+function saveErasingHistory(type, scope, groupIndex, groupValue, elementIndex, elementValue) {
     const historyEntry = {};
     historyEntry.type = type;
     historyEntry.action = "removed";
@@ -159,7 +158,7 @@ function saveRemovalHistory(type, scope, groupIndex, groupValue, elementIndex, e
     history.push(historyEntry);
 }
 
-function undoElement(x, y, elementGroups) {
+function eraseElement(x, y, elementGroups) {
     let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroups);
     if (elementGroupAndElement != null) {
         let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
@@ -174,20 +173,20 @@ function undoElement(x, y, elementGroups) {
             elementGroupIndex = rivers.indexOf(elementGroupAndElement[0]);
         }
 
-        saveRemovalHistory(elementGroup.elementType, "element",
+        saveErasingHistory(elementGroup.elementType, "element",
             elementGroupIndex, elementGroupAndElement[0],
             elementIndex, elementGroupAndElement[1]);
     }
 }
 
-function undoElementGroup(x, y, elementGroups) {
+function eraseElementGroup(x, y, elementGroups) {
 
     let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroups);
     if (elementGroupAndElement != null) {
         let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
         elementGroups.splice(elementGroupIndex, 1);
         redraw();
-        saveRemovalHistory(elementGroup.elementType, "group",
+        saveErasingHistory(elementGroup.elementType, "group",
             elementGroupIndex, elementGroupAndElement[0]);
     }
 }
@@ -234,7 +233,7 @@ function findElementGroupAndElement(x, y, elementGroups) {
 }
 
 
-function drawRivers(x, y, isDown) {
+function formRivers(x, y, isDown) {
     const size = 3;
     const distortion = 1.75;
 
