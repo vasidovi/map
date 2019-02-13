@@ -43,8 +43,8 @@ function Draw(x, y, isDown) {
     } else if (activeTool == "corrector") {
         correct(x, y, isDown);
     } else if (activeTool == "eraser") {
-        // undoRiverPart(x, y);
         undoRiverPart(x, y);
+        //undoMountain(x, y);
     }
     ctx.restore();
 };
@@ -53,11 +53,10 @@ function drawMountains(x, y, isDown) {
     const size = 35;
 
     if (isDown) {
-
         if (Math.abs(x - prevX) >= size || Math.abs(y - prevY) >= size) {
-            ctx.drawImage(img, x - size / 2, y - size / 2, size, size);
-            mountainRanges.last().elements.push(
-                new Mountain(x - size / 2, y - size / 2, size));
+            const mountain = new Mountain(x - size / 2, y - size / 2, size, "mountain");
+            mountain.draw(ctx);
+            mountainRanges.last().elements.push(mountain);
             prevX = x;
             prevY = y;
         }
@@ -74,11 +73,7 @@ function redrawMountains(mountainRanges) {
 
     for (let i = 0; i < mountainRanges.length; i++) {
         let mountainRange = mountainRanges[i];
-        let mountains = mountainRange.elements;
-        for (let j = 0; j < mountains.length; j++) {
-            ctx.drawImage(img, mountains[j].x, mountains[j].y,
-                mountains[j].size, mountains[j].size);
-        }
+        mountainRange.draw(ctx);
     }
 }
 
@@ -144,23 +139,9 @@ function redraw() {
 
 function redrawRivers(rivers) {
     for (let i = 0; i < rivers.length; i++) {
-        let riverParts = rivers[i].elements;
-        for (let j = 1; j < riverParts.length - 1; j++) {
-            const startX = riverParts[j - 1].x;
-            const startY = riverParts[j - 1].y;
-            const endX = riverParts[j].x;
-            const endY = riverParts[j].y;
-            ctx.beginPath();
-            ctx.strokeStyle = "#000";
-            ctx.lineJoin = "round";
-            ctx.moveTo(startX, startY);
-            ctx.lineTo(endX, endY);
-            ctx.stroke();
-
-        }
+        rivers[i].draw(ctx);
     }
 }
-
 
 function findElementGroupAndElement(x, y, elementGroups) {
 
@@ -202,15 +183,15 @@ function drawRivers(x, y, isDown) {
             ctx.beginPath();
             ctx.lineJoin = "round";
             ctx.moveTo(prevX, prevY);
-            rivers.last().elements.push( new RiverPart(prevX, prevY));
             prevX = x + (Math.random() - 0.5) * Math.abs(prevX - x) * distortion;
             prevY = y + (Math.random() - 0.5) * Math.abs(prevY - y) * distortion;
             ctx.lineTo(prevX, prevY);
+            rivers.last().elements.push( new RiverPart(prevX, prevY));
             ctx.stroke();
         }
 
     } else {
-        rivers.push( new River());
+        rivers.push( new River([new RiverPart(x,y)]));
         prevX = x;
         prevY = y;
     }
