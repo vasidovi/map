@@ -3,7 +3,7 @@ var lastX, lastY;
 var ctx;
 var img = new Image();
 let rivers = [];
-const mountainRanges = [];
+let mountainRanges = [];
 let activeTool;
 
 let prevX = 0;
