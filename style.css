@@ -27,6 +27,6 @@ body {
   height: 25px;
 }
 
-.tool-button.selected {
+.tool-button.active {
   background-color : #777;
 }
