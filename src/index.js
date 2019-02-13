@@ -15,12 +15,12 @@ ctx.canvas.height = window.innerHeight * 0.95;
 
 $('#myCanvas').mousedown(function (e) {
     mousePressed = true;
-    Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false);
+    useTool(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false);
 });
 
 $('#myCanvas').mousemove(function (e) {
     if (mousePressed) {
-        Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true);
+        useTool(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true);
     }
 });
 
@@ -31,14 +31,14 @@ $('#myCanvas').mouseleave(function (e) {
     mousePressed = false;
 });
 
-function Draw(x, y, isDown) {
+function useTool(x, y, isDown) {
 
     ctx.save();
     // console.log( "we are in draw" + activeTool);
     if (activeTool == "mountains") {
-        drawMountains(x, y, isDown);
+        formMountains(x, y, isDown);
     } else if (activeTool == "rivers") {
-        drawRivers(x, y, isDown);
+        formRivers(x, y, isDown);
     } else if (activeTool == "corrector") {
         correct(x, y, isDown);
     } else if (activeTool == "eraser") {
@@ -81,7 +81,7 @@ function undoLastAction() {
     }
 };
 
-function drawMountains(x, y, isDown) {
+function formMountains(x, y, isDown) {
     const size = 35;
 
     if (isDown) {
@@ -169,10 +169,10 @@ function eraseElement(x, y, elementGroups) {
 
         // to redo, quick fix
         elementGroupIndex = mountainRanges.indexOf(elementGroupAndElement[0]);
-        if ( elementGroupIndex == -1){
+        if (elementGroupIndex == -1) {
             elementGroupIndex = rivers.indexOf(elementGroupAndElement[0]);
         }
-        
+
         saveErasingHistory(elementGroup.elementType, "element",
             elementGroupIndex, elementGroupAndElement[0],
             elementIndex, elementGroupAndElement[1]);
@@ -233,7 +233,7 @@ function findElementGroupAndElement(x, y, elementGroups) {
 }
 
 
-function drawRivers(x, y, isDown) {
+function formRivers(x, y, isDown) {
     const size = 3;
     const distortion = 1.75;
 
