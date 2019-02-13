@@ -1,9 +1,10 @@
-
-// EXPORTS
-let activeTool;
-
 const data = {
     tools: [{
+            name: 'undo',
+            title: 'Undo',
+            src: 'https://cdn2.iconfinder.com/data/icons/toolbar-icons/512/Undo_Arrow-512.png',
+            action: undoLastAction
+        }, {
             name: 'mountains',
             title: 'Mountains',
             src: 'https://cdn3.iconfinder.com/data/icons/pyconic-icons-1-2/512/mountain-512.png'
@@ -25,9 +26,13 @@ const data = {
         }
     ],
     setActiveTool: function (tool) {
-        data.tools.forEach(e => e.isActive = false);
-        tool.isActive = true;
-        activeTool = tool.name;
+        if (tool.action) {
+            tool.action();
+        } else {
+            data.tools.forEach(e => e.isActive = false);
+            tool.isActive = true;
+            activeTool = tool.name;
+        }
     }
 }
 
