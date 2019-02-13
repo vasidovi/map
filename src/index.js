@@ -9,7 +9,7 @@ let prevX = 0;
 let prevY = 0;
 
 ctx = document.getElementById('myCanvas').getContext("2d");
-img.src = "./images/mountains-trial.png";
+img.src = "../res/images/mountains-trial.png";
 
 ctx.canvas.width = window.innerWidth * 0.95;
 ctx.canvas.height = window.innerHeight * 0.95;
