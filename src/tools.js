@@ -39,6 +39,6 @@ const data = {
 data.setActiveTool(data.tools[1]);
 
 const app = new Vue({
-    el: "#container",
+    el: "#tools",
     data
 })
