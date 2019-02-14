@@ -3,6 +3,7 @@ import Mountain from './models/Mountain.mjs';
 import River from './models/River.mjs';
 import RiverPart from './models/RiverPart.mjs';
 import MapData from './MapData.mjs';
+import History from './History.mjs';
 
 var lastX, lastY;
 var ctx;
@@ -11,7 +12,6 @@ export const activeTool = {};
 let rivers = MapData.data.rivers;
 let mountainRanges = MapData.data.mountainRanges;
 
-const history = [];
 let prevX = 0;
 let prevY = 0;
 
@@ -39,45 +39,6 @@ export function useTool (x, y, isDown) {
 	ctx.restore();
 }
 
-export function undoLastAction () {
-	if (history.length > 0) {
-		const lastEntry = history.last();
-		if (lastEntry.action === 'added') {
-			if (lastEntry.type === 'mountainRange') {
-				mountainRanges.pop();
-			} else if (lastEntry.type === 'river') {
-				rivers.pop();
-			}
-		} else if (lastEntry.action === 'removed') {
-			if (lastEntry.type === 'mountainRange') {
-				if (lastEntry.scope === 'group') {
-					mountainRanges.push(lastEntry.groupValue);
-				} else if (lastEntry.scope === 'element') {
-					const mountainRange = lastEntry.groupValue;
-					mountainRange.elements.splice(
-						lastEntry.elementIndex,
-						0,
-						lastEntry.elementValue
-					);
-				}
-			} else if (lastEntry.type === 'river') {
-				if (lastEntry.scope === 'group') {
-					rivers.push(lastEntry.groupValue);
-				} else if (lastEntry.scope === 'element') {
-					const river = lastEntry.groupValue;
-					river.elements.splice(
-						lastEntry.elementIndex,
-						0,
-						lastEntry.elementValue
-					);
-				}
-			}
-		}
-		history.pop();
-		redraw();
-	}
-}
-
 function formMountains (x, y, isDown) {
 	const size = 35;
 
@@ -99,7 +60,7 @@ function formMountains (x, y, isDown) {
 		const historyEntry = {};
 		historyEntry.action = 'added';
 		historyEntry.type = 'mountainRange';
-		history.push(historyEntry);
+		History.history.push(historyEntry);
 		prevX = x;
 		prevY = y;
 	}
@@ -145,7 +106,7 @@ function saveErasingHistory (
 	historyEntry.groupValue = groupValue;
 	historyEntry.elementIndex = elementIndex;
 	historyEntry.elementValue = elementValue;
-	history.push(historyEntry);
+	History.history.push(historyEntry);
 }
 
 function eraseElement (x, y) {
@@ -212,7 +173,7 @@ function formRivers (x, y, isDown) {
 		const historyEntry = {};
 		historyEntry.action = 'added';
 		historyEntry.type = 'river';
-		history.push(historyEntry);
+		History.history.push(historyEntry);
 		prevX = x;
 		prevY = y;
 	}
