@@ -1,3 +1,5 @@
+import Canvas from './Canvas.mjs';
+
 const data = {};
 data.rivers = [];
 data.mountainRanges = [];
@@ -5,6 +7,16 @@ data.mountainRanges = [];
 export default class MapData {
 	static get data () {
 		return data;
+	}
+
+	static redraw () {
+		Canvas.clearArea();
+		// returns [] of values [rivers, mountainRanges]
+		Object.values(data).forEach(elementGroups => {
+			elementGroups.forEach(
+				elementGroup => elementGroup.draw(Canvas.mainCtx)
+			);
+		});
 	}
 
 	static findElementGroupAndElement (x, y, query) {

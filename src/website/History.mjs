@@ -1,5 +1,4 @@
 import MapData from './MapData.mjs';
-import { redraw } from './index.js';
 
 const history = [];
 
@@ -43,7 +42,7 @@ export default class History {
 				}
 			}
 			history.pop();
-			redraw();
+			MapData.redraw();
 		}
 	}
 }

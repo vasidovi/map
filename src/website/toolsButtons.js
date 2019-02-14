@@ -1,11 +1,8 @@
 // import Vue from 'vue';
 import History from './History.mjs';
+import Tools from './Tools.mjs';
 import {
-	activeTool
-} from './index.js';
-import {
-	saveMap
-} from './webservices.js';
+	saveMap } from './webservices.mjs';
 
 const data = {
 	tools: [{
@@ -52,7 +49,7 @@ const data = {
 				e.isActive = false;
 			});
 			tool.isActive = true;
-			activeTool.name = tool.name;
+			Tools.activeTool.name = tool.name;
 		}
 	}
 };

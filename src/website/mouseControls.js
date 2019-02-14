@@ -1,13 +1,11 @@
-import {
-	useTool
-} from './index.js';
+import Tools from './Tools.mjs';
 
 let mousePressed = false;
 const layer = $('#layer2');
 
 layer.mousedown(function (e) {
 	mousePressed = true;
-	useTool(
+	Tools.useTool(
 		e.pageX - $(this).offset().left,
 		e.pageY - $(this).offset().top,
 		false
@@ -16,7 +14,7 @@ layer.mousedown(function (e) {
 
 layer.mousemove(function (e) {
 	if (mousePressed) {
-		useTool(
+		Tools.useTool(
 			e.pageX - $(this).offset().left,
 			e.pageY - $(this).offset().top,
 			true

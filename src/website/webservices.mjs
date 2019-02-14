@@ -5,10 +5,6 @@ import Mountain from './models/Mountain.mjs';
 import River from './models/River.mjs';
 import RiverPart from './models/RiverPart.mjs';
 
-import {
-	redraw
-} from './index.js';
-
 const routes = {
 	map: '/map'
 };
@@ -33,7 +29,7 @@ export function saveMap () {
 	});
 }
 
-function loadMap () {
+export function loadMap () {
 	$.ajax({
 		url: routes.map,
 		type: 'GET',
@@ -50,7 +46,7 @@ function loadMap () {
 				}
 			});
 
-			redraw();
+			MapData.redraw();
 		},
 		error: function (_, status) {
 			console.log(status);

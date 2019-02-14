@@ -1,4 +1,4 @@
-import { saveMap } from './webservices.js';
+import { saveMap } from './webservices.mjs';
 import History from './History.mjs';
 
 $(document).bind('keydown', 'ctrl+s', function (e) {
