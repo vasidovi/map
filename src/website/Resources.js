@@ -1,6 +1,7 @@
 const loadedImages = {};
 const sources = {
-	'mountain': '/images/mountains-trial.png'
+	'mountain': '/images/mountains-trial.png',
+	'mountain-selected': '/images/mountain-trial-selected.png'
 };
 
 export default class Resources {

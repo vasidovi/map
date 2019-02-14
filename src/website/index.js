@@ -6,8 +6,7 @@ import MapData from './MapData.mjs';
 import History from './History.mjs';
 
 var lastX, lastY;
-var ctx1;
-// var ctx2;
+
 export const activeTool = {};
 
 let rivers = MapData.data.rivers;
@@ -16,15 +15,19 @@ let mountainRanges = MapData.data.mountainRanges;
 let prevX = 0;
 let prevY = 0;
 
-ctx1 = document.getElementById('layer1').getContext('2d');
+let ctx1 = document.getElementById('layer1').getContext('2d');
 ctx1.canvas.width = window.innerWidth * 0.95;
 ctx1.canvas.height = window.innerHeight * 0.95;
+let ctx2 = document.getElementById('layer2').getContext('2d');
+ctx2.canvas.width = window.innerWidth * 0.95;
+ctx2.canvas.height = window.innerHeight * 0.95;
 
 const tools = {
 	mountains: formMountains,
 	rivers: formRivers,
 	corrector: correct,
 	eraser: eraseElement
+	// selector: markSelected
 };
 
 export function useTool (x, y, isDown) {
@@ -39,6 +42,10 @@ export function useTool (x, y, isDown) {
 
 	ctx1.restore();
 }
+
+// function markSelected(x,y, isDown) {
+// 	  nearestMountain =  MapData.findElementGroupAndElement(x,y, "mountainRanges");
+// }
 
 function formMountains (x, y, isDown) {
 	const size = 35;

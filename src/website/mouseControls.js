@@ -3,8 +3,9 @@ import {
 } from './index.js';
 
 let mousePressed = false;
+const layer = $('#layer2');
 
-$('#layer1').mousedown(function (e) {
+layer.mousedown(function (e) {
 	mousePressed = true;
 	useTool(
 		e.pageX - $(this).offset().left,
@@ -13,7 +14,7 @@ $('#layer1').mousedown(function (e) {
 	);
 });
 
-$('#layer1').mousemove(function (e) {
+layer.mousemove(function (e) {
 	if (mousePressed) {
 		useTool(
 			e.pageX - $(this).offset().left,
@@ -23,10 +24,10 @@ $('#layer1').mousemove(function (e) {
 	}
 });
 
-$('#layer1').mouseup(function (e) {
+layer.mouseup(function (e) {
 	mousePressed = false;
 });
 
-$('#layer1').mouseleave(function (e) {
+layer.mouseleave(function (e) {
 	mousePressed = false;
 });
