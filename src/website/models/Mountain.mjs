@@ -1,9 +1,7 @@
-import {
-	Resources
-} from '../Resources.js';
+import Resources from '../Resources.js';
 import Element from './Element.mjs';
 
-export class Mountain extends Element {
+export default class Mountain extends Element {
 	constructor (x, y, size, type) {
 		super(x, y);
 		this.type = type;

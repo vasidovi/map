@@ -1,16 +1,10 @@
 import MapData from './MapData.mjs';
-import {
-	MountainRange
-} from './models/MountainRange.mjs';
-import {
-	Mountain
-} from './models/Mountain.mjs';
-import {
-	River
-} from './models/River.mjs';
-import {
-	RiverPart
-} from './models/RiverPart.mjs';
+
+import MountainRange from './models/MountainRange.mjs';
+import Mountain from './models/Mountain.mjs';
+import River from './models/River.mjs';
+import RiverPart from './models/RiverPart.mjs';
+
 import {
 	redraw
 } from './index.js';

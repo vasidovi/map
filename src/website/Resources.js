@@ -3,7 +3,7 @@ const sources = {
 	'mountain': '/images/mountains-trial.png'
 };
 
-export class Resources {
+export default class Resources {
 	static get sources () {
 		return sources;
 	}

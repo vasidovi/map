@@ -1,15 +1,7 @@
-import {
-	MountainRange
-} from './models/MountainRange.mjs';
-import {
-	Mountain
-} from './models/Mountain.mjs';
-import {
-	River
-} from './models/River.mjs';
-import {
-	RiverPart
-} from './models/RiverPart.mjs';
+import MountainRange from './models/MountainRange.mjs';
+import Mountain from './models/Mountain.mjs';
+import River from './models/River.mjs';
+import RiverPart from './models/RiverPart.mjs';
 import MapData from './MapData.mjs';
 
 var mousePressed = false;

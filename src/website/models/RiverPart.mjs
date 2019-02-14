@@ -1,5 +1,5 @@
 import Element from './Element.mjs';
 
-export class RiverPart extends Element {
+export default class RiverPart extends Element {
 
 }

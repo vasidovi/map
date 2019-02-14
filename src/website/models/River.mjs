@@ -1,6 +1,6 @@
 import ElementGroup from './ElementGroup.mjs';
 
-export class River extends ElementGroup {
+export default class River extends ElementGroup {
 	get elementType () {
 		return 'river';
 	}
