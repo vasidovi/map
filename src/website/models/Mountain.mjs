@@ -13,4 +13,10 @@ export default class Mountain extends Element {
 			ctx.drawImage(image, this.x, this.y, this.size, this.size);
 		});
 	}
+
+	highlight (ctx) {
+		Resources.load(this.type + '-selected', (image) => {
+			ctx.drawImage(image, this.x, this.y, this.size, this.size);
+		});
+	}
 }

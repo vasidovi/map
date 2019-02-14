@@ -26,8 +26,8 @@ const tools = {
 	mountains: formMountains,
 	rivers: formRivers,
 	corrector: correct,
-	eraser: eraseElement
-	// selector: markSelected
+	eraser: eraseElement,
+	selector: markSelected
 };
 
 export function useTool (x, y, isDown) {
@@ -43,9 +43,11 @@ export function useTool (x, y, isDown) {
 	ctx1.restore();
 }
 
-// function markSelected(x,y, isDown) {
-// 	  nearestMountain =  MapData.findElementGroupAndElement(x,y, "mountainRanges");
-// }
+function markSelected (x, y, isDown) {
+	clearArea(ctx2);
+	const nearestObject = MapData.findElementGroupAndElement(x, y)[1];
+	nearestObject.highlight(ctx2);
+}
 
 function formMountains (x, y, isDown) {
 	const size = 35;
@@ -189,8 +191,9 @@ function formRivers (x, y, isDown) {
 	lastY = y;
 }
 
-function clearArea () {
+function clearArea (ctx) {
+	ctx = ctx || ctx1;
 	// Use the identity matrix while clearing the canvas
-	ctx1.setTransform(1, 0, 0, 1, 0, 0);
-	ctx1.clearRect(0, 0, ctx1.canvas.width, ctx1.canvas.height);
+	ctx.setTransform(1, 0, 0, 1, 0, 0);
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }

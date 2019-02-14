@@ -13,6 +13,9 @@ export default class River extends ElementGroup {
 	// @Override
 	draw (ctx) {
 		// super.draw(ctx);
+		if (this.elements.length === 0) {
+			return;
+		}
 		ctx.strokeStyle = '#000';
 		ctx.lineJoin = 'round';
 		ctx.beginPath();
