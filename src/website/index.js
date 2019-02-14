@@ -4,7 +4,6 @@ import River from './models/River.mjs';
 import RiverPart from './models/RiverPart.mjs';
 import MapData from './MapData.mjs';
 
-var mousePressed = false;
 var lastX, lastY;
 var ctx;
 export const activeTool = {};
@@ -20,45 +19,23 @@ ctx = document.getElementById('myCanvas').getContext('2d');
 ctx.canvas.width = window.innerWidth * 0.95;
 ctx.canvas.height = window.innerHeight * 0.95;
 
-$('#myCanvas').mousedown(function (e) {
-	mousePressed = true;
-	useTool(
-		e.pageX - $(this).offset().left,
-		e.pageY - $(this).offset().top,
-		false
-	);
-});
+const tools = {
+	mountains: formMountains,
+	rivers: formRivers,
+	corrector: correct,
+	eraser: eraseElement
+};
 
-$('#myCanvas').mousemove(function (e) {
-	if (mousePressed) {
-		useTool(
-			e.pageX - $(this).offset().left,
-			e.pageY - $(this).offset().top,
-			true
-		);
-	}
-});
-
-$('#myCanvas').mouseup(function (e) {
-	mousePressed = false;
-});
-$('#myCanvas').mouseleave(function (e) {
-	mousePressed = false;
-});
-
-function useTool (x, y, isDown) {
+export function useTool (x, y, isDown) {
 	ctx.save();
-	// console.log( "we are in draw" + activeTool);
-	if (activeTool.name === 'mountains') {
-		formMountains(x, y, isDown);
-	} else if (activeTool.name === 'rivers') {
-		formRivers(x, y, isDown);
-	} else if (activeTool.name === 'corrector') {
-		correct(x, y, isDown);
-	} else if (activeTool.name === 'eraser') {
-		eraseElement(x, y);
+
+	const tool = tools[activeTool.name];
+	if (tool) {
+		tool(x, y, isDown);
+	} else {
+		console.log(`Couldn't process tool '${activeTool.name}'`);
 	}
-	// updateHistory(activeTool);
+
 	ctx.restore();
 }
 
@@ -171,8 +148,8 @@ function saveErasingHistory (
 	history.push(historyEntry);
 }
 
-function eraseElement (x, y, query) {
-	let elementGroupAndElement = MapData.findElementGroupAndElement(x, y, query);
+function eraseElement (x, y) {
+	let elementGroupAndElement = MapData.findElementGroupAndElement(x, y);
 	if (elementGroupAndElement != null) {
 		let elementGroup = elementGroupAndElement[0];
 		let elementIndex = elementGroup.elements.indexOf(elementGroupAndElement[1]);
@@ -189,8 +166,8 @@ function eraseElement (x, y, query) {
 	}
 }
 
-// function eraseElementGroup (x, y, query) {
-// 	let elementGroupAndElement = MapData.findElementGroupAndElement(x, y, query);
+// function eraseElementGroup (x, y) {
+// 	let elementGroupAndElement = MapData.findElementGroupAndElement(x, y);
 // 	if (elementGroupAndElement != null) {
 // 		let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
 // 		elementGroups.splice(elementGroupIndex, 1);
