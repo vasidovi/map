@@ -1,6 +1,6 @@
 // import Vue from 'vue';
+import History from './History.mjs';
 import {
-	undoLastAction,
 	activeTool
 } from './index.js';
 import {
@@ -12,7 +12,7 @@ const data = {
 		name: 'undo',
 		title: 'Undo',
 		src: 'https://cdn2.iconfinder.com/data/icons/toolbar-icons/512/Undo_Arrow-512.png',
-		action: undoLastAction
+		action: History.undoLastAction
 	}, {
 		name: 'save',
 		title: 'Save',
