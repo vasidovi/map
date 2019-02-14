@@ -13,7 +13,7 @@
             Your browser does not support the HTML5 canvas tag.
         </canvas>
         <canvas id="layer2">
-             Your browser does not support the HTML5 canvas tag.
+            Your browser does not support the HTML5 canvas tag.
         </canvas>
         <div id="tools" class="tool-button-container">
             <button v-for="tool in tools" :id="tool.name + '-btn'" class="tool-button" :title="tool.title" v-bind:class="{active: tool.isActive}"
@@ -24,15 +24,16 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js"></script>
     <script src="https://unpkg.com/vue"></script>
 
     <script src="./extensions.js"></script>
-    
+
     <script src="./index.js" type="module"></script>
-    <script src="./mouseControls.js" type="module"></script>
     <script src="./webservices.js" type="module"></script>
     <script src="./tools.js" type="module"></script>
-
+    <script src="./keyboardControls.js" type="module"></script>
+    <script src="./mouseControls.js" type="module"></script>
 </body>
 
 </html>
