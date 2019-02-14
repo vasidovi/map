@@ -1,3 +1,0 @@
-class RiverPart extends Element {
-    
-}

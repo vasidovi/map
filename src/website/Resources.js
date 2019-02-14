@@ -1,37 +1,35 @@
 const loadedImages = {};
 const sources = {
-    "mountain": "/images/mountains-trial.png",
+	'mountain': '/images/mountains-trial.png'
 };
 
-class Resources {
+export class Resources {
+	static get sources () {
+		return sources;
+	}
 
-    static get sources() {
-        return sources;
-    }
+	static get loadedImages () {
+		return loadedImages;
+	}
 
-    static get loadedImages() {
-        return loadedImages;
-    }
-
-    static load(key) {
-        let image = this.loadedImages[key];
-        if (!image) {
-            image = new Image();
-            image.src = this.sources[key];
-            loadedImages[key] = image;
-        }
-        return image;
-    }
+	static load (key, callback) {
+		let image = this.loadedImages[key];
+		if (!image) {
+			image = new Image();
+			image.onload = () => {
+				loadedImages[key] = image;
+				callback(image);
+			};
+			image.src = this.sources[key];
+		} else {
+			callback(image);
+		}
+	}
 }
 
 Object.keys(sources).forEach(k => {
-    if (!document.location.hostname) {
-
-        // route to local path for no-server testing
-        sources[k] = "../../res" + sources[k]
-    } else {
-
-        // shouldn't draw before loaded, thats why we preload
-        Resources.load(k)
-    }
-})
+	if (!document.location.hostname) {
+		// route to local path for no-server testing
+		sources[k] = '../../res' + sources[k];
+	}
+});

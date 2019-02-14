@@ -13,13 +13,9 @@
             Your browser does not support the HTML5 canvas tag.
         </canvas>
         <div id="tools" class="tool-button-container">
-            <button v-for="tool in tools" 
-            :id="tool.name + '-btn'" 
-            class="tool-button" 
-            :title="tool.title" 
-            v-bind:class="{active: tool.isActive}"
-            v-on:click="setActiveTool(tool)">
-            <img :src="tool.src" />
+            <button v-for="tool in tools" :id="tool.name + '-btn'" class="tool-button" :title="tool.title" v-bind:class="{active: tool.isActive}"
+                v-on:click="setActiveTool(tool)">
+                <img :src="tool.src" />
             </button>
         </div>
     </div>
@@ -27,19 +23,11 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
 
-    <script src="./Resources.js"></script>
-
-    <script src="./models/Element.js"></script>
-    <script src="./models/Mountain.js"></script>
-    <script src="./models/RiverPart.js"></script>
-    <script src="./models/ElementGroup.js"></script>
-    <script src="./models/MountainRange.js"></script>
-    <script src="./models/River.js"></script>
-
     <script src="./extensions.js"></script>
-    <script src="./index.js"></script>
-    <script src="./webservices.js"></script>
-    <script src="./tools.js"></script>
+    
+    <script src="./index.js" type="module"></script>
+    <script src="./webservices.js" type="module"></script>
+    <script src="./tools.js" type="module"></script>
 
 </body>
 
