@@ -1,0 +1,23 @@
+{
+	"env": {
+		"es6": true,
+		"node": true,
+		"jquery": true
+	},
+	"extends": [
+		"standard"
+	],
+	"parserOptions": {
+		"ecmaVersion": 2018,
+		"sourceType": "module"
+	},
+	"rules": {
+		"no-console": "warn",
+		"indent": ["warn", "tab"],
+		"no-tabs": "off",
+		"semi": ["error", "always"]
+	},
+	"plugins": [
+		"prettier"
+	]
+}
