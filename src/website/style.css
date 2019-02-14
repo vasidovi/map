@@ -5,11 +5,29 @@ body {
   margin: 0;
 }
 
-#myCanvas {
+#layer1 {
   display: block;
-  margin: 0 auto;
+  position: absolute;
+  z-index: 1;
+  border:1px solid #000;
+  width: fit-content;
+  height:  fit-content;
 }
 
+#layer2{
+  position: absolute;
+  z-index: 2;
+  width: fit-content;
+  height:  fit-content;
+}
+
+#container{
+  position: relative;
+  margin: 0 auto;
+  width: 95%;
+  height:  95%;
+  /* padding: 10px; */
+}
 .tool-button-container {
   position: fixed;
   top: 10%;

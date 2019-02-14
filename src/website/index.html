@@ -9,8 +9,11 @@
 <body>
 
     <div id="container">
-        <canvas id="myCanvas" style="border:1px solid #000000;">
+        <canvas id="layer1">
             Your browser does not support the HTML5 canvas tag.
+        </canvas>
+        <canvas id="layer2">
+             Your browser does not support the HTML5 canvas tag.
         </canvas>
         <div id="tools" class="tool-button-container">
             <button v-for="tool in tools" :id="tool.name + '-btn'" class="tool-button" :title="tool.title" v-bind:class="{active: tool.isActive}"

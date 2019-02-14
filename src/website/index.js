@@ -6,7 +6,8 @@ import MapData from './MapData.mjs';
 
 var mousePressed = false;
 var lastX, lastY;
-var ctx;
+var ctx1;
+// var ctx2;
 export const activeTool = {};
 
 let rivers = MapData.data.rivers;
@@ -16,11 +17,11 @@ const history = [];
 let prevX = 0;
 let prevY = 0;
 
-ctx = document.getElementById('myCanvas').getContext('2d');
-ctx.canvas.width = window.innerWidth * 0.95;
-ctx.canvas.height = window.innerHeight * 0.95;
+ctx1 = document.getElementById('layer1').getContext('2d');
+ctx1.canvas.width = window.innerWidth * 0.95;
+ctx1.canvas.height = window.innerHeight * 0.95;
 
-$('#myCanvas').mousedown(function (e) {
+$('#layer1').mousedown(function (e) {
 	mousePressed = true;
 	useTool(
 		e.pageX - $(this).offset().left,
@@ -29,7 +30,7 @@ $('#myCanvas').mousedown(function (e) {
 	);
 });
 
-$('#myCanvas').mousemove(function (e) {
+$('#layer1').mousemove(function (e) {
 	if (mousePressed) {
 		useTool(
 			e.pageX - $(this).offset().left,
@@ -39,15 +40,15 @@ $('#myCanvas').mousemove(function (e) {
 	}
 });
 
-$('#myCanvas').mouseup(function (e) {
+$('#layer1').mouseup(function (e) {
 	mousePressed = false;
 });
-$('#myCanvas').mouseleave(function (e) {
+$('#layer1').mouseleave(function (e) {
 	mousePressed = false;
 });
 
 function useTool (x, y, isDown) {
-	ctx.save();
+	ctx1.save();
 	// console.log( "we are in draw" + activeTool);
 	if (activeTool.name === 'mountains') {
 		formMountains(x, y, isDown);
@@ -59,7 +60,11 @@ function useTool (x, y, isDown) {
 		eraseElement(x, y);
 	}
 	// updateHistory(activeTool);
-	ctx.restore();
+	ctx1.restore();
+}
+
+function markSelection () {
+
 }
 
 export function undoLastAction () {
@@ -112,7 +117,7 @@ function formMountains (x, y, isDown) {
 				size,
 				'mountain'
 			);
-			mountain.draw(ctx);
+			mountain.draw(ctx1);
 			mountainRanges.last().elements.push(mountain);
 			prevX = x;
 			prevY = y;
@@ -133,7 +138,7 @@ function formMountains (x, y, isDown) {
 function redrawMountains (mountainRanges) {
 	for (let i = 0; i < mountainRanges.length; i++) {
 		let mountainRange = mountainRanges[i];
-		mountainRange.draw(ctx);
+		mountainRange.draw(ctx1);
 	}
 }
 
@@ -141,14 +146,14 @@ function correct (x, y, isDown) {
 	const size = 20;
 
 	if (isDown) {
-		ctx.beginPath();
-		ctx.strokeStyle = '#fff';
-		ctx.lineWidth = size;
-		ctx.lineJoin = 'round';
-		ctx.moveTo(lastX, lastY);
-		ctx.lineTo(x, y);
-		ctx.closePath();
-		ctx.stroke();
+		ctx1.beginPath();
+		ctx1.strokeStyle = '#fff';
+		ctx1.lineWidth = size;
+		ctx1.lineJoin = 'round';
+		ctx1.moveTo(lastX, lastY);
+		ctx1.lineTo(x, y);
+		ctx1.closePath();
+		ctx1.stroke();
 	}
 	lastX = x;
 	lastY = y;
@@ -211,7 +216,7 @@ export function redraw () {
 
 function redrawRivers (rivers) {
 	for (let i = 0; i < rivers.length; i++) {
-		rivers[i].draw(ctx);
+		rivers[i].draw(ctx1);
 	}
 }
 
@@ -221,14 +226,14 @@ function formRivers (x, y, isDown) {
 
 	if (isDown) {
 		if (Math.abs(x - prevX) >= size || Math.abs(y - prevY) >= size) {
-			ctx.beginPath();
-			ctx.lineJoin = 'round';
-			ctx.moveTo(prevX, prevY);
+			ctx1.beginPath();
+			ctx1.lineJoin = 'round';
+			ctx1.moveTo(prevX, prevY);
 			prevX = x + (Math.random() - 0.5) * Math.abs(prevX - x) * distortion;
 			prevY = y + (Math.random() - 0.5) * Math.abs(prevY - y) * distortion;
-			ctx.lineTo(prevX, prevY);
+			ctx1.lineTo(prevX, prevY);
 			rivers.last().elements.push(new RiverPart(prevX, prevY));
-			ctx.stroke();
+			ctx1.stroke();
 		}
 	} else {
 		rivers.push(new River([new RiverPart(x, y)]));
@@ -245,6 +250,6 @@ function formRivers (x, y, isDown) {
 
 function clearArea () {
 	// Use the identity matrix while clearing the canvas
-	ctx.setTransform(1, 0, 0, 1, 0, 0);
-	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	ctx1.setTransform(1, 0, 0, 1, 0, 0);
+	ctx1.clearRect(0, 0, ctx1.canvas.width, ctx1.canvas.height);
 }
