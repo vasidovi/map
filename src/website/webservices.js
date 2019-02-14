@@ -46,11 +46,15 @@ function loadMap () {
 		success: function (response) {
 			const string = JSON.stringify(response);
 
-			var parsed = deserialize(string);
-			const data = MapData.data;
+			var data = deserialize(string);
 
-			data.rivers.push(...parsed.rivers);
-			data.mountainRanges.push(...parsed.mountainRanges);
+			// Expect all fields to be arrays
+			Object.keys(MapData.data).forEach(key => {
+				if (data[key]) {
+					MapData.data[key].length = 0;
+					MapData.data[key].push(...data[key]);
+				}
+			});
 
 			redraw();
 		},
