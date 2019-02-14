@@ -238,7 +238,6 @@ function formRivers(x, y, isDown) {
     const distortion = 1.75;
 
     if (isDown) {
-
         if (Math.abs(x - prevX) >= size || Math.abs(y - prevY) >= size) {
             ctx.beginPath();
             ctx.lineJoin = "round";

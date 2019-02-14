@@ -21,8 +21,8 @@ const data = {
         },
         {
             name: 'corrector',
-            title: 'Corrector',
-            src: 'https://static.thenounproject.com/png/62595-200.png'
+            title: 'Correction pen',
+            src: 'https://image.flaticon.com/icons/svg/1440/1440157.svg'
         },
         {
             name: 'eraser',
