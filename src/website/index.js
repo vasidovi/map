@@ -1,14 +1,25 @@
-import { MountainRange } from './models/MountainRange.mjs';
-import { Mountain } from './models/Mountain.mjs';
-import { River } from './models/River.mjs';
-import { RiverPart } from './models/RiverPart.mjs';
+import {
+	MountainRange
+} from './models/MountainRange.mjs';
+import {
+	Mountain
+} from './models/Mountain.mjs';
+import {
+	River
+} from './models/River.mjs';
+import {
+	RiverPart
+} from './models/RiverPart.mjs';
+import MapData from './MapData.mjs';
 
 var mousePressed = false;
 var lastX, lastY;
 var ctx;
 export const activeTool = {};
-export let rivers = [];
-export let mountainRanges = [];
+
+let rivers = MapData.data.rivers;
+let mountainRanges = MapData.data.mountainRanges;
+
 const history = [];
 let prevX = 0;
 let prevY = 0;
@@ -53,7 +64,7 @@ function useTool (x, y, isDown) {
 	} else if (activeTool.name === 'corrector') {
 		correct(x, y, isDown);
 	} else if (activeTool.name === 'eraser') {
-		eraseElement(x, y, [...rivers, ...mountainRanges]);
+		eraseElement(x, y);
 	}
 	// updateHistory(activeTool);
 	ctx.restore();
@@ -62,7 +73,6 @@ function useTool (x, y, isDown) {
 export function undoLastAction () {
 	if (history.length > 0) {
 		const lastEntry = history.last();
-		console.log(lastEntry);
 		if (lastEntry.action === 'added') {
 			if (lastEntry.type === 'mountainRange') {
 				mountainRanges.pop();
@@ -74,8 +84,7 @@ export function undoLastAction () {
 				if (lastEntry.scope === 'group') {
 					mountainRanges.push(lastEntry.groupValue);
 				} else if (lastEntry.scope === 'element') {
-					console.log(mountainRanges);
-					const mountainRange = mountainRanges[lastEntry.groupIndex];
+					const mountainRange = lastEntry.groupValue;
 					mountainRange.elements.splice(
 						lastEntry.elementIndex,
 						0,
@@ -86,7 +95,7 @@ export function undoLastAction () {
 				if (lastEntry.scope === 'group') {
 					rivers.push(lastEntry.groupValue);
 				} else if (lastEntry.scope === 'element') {
-					const river = rivers[lastEntry.groupIndex];
+					const river = lastEntry.groupValue;
 					river.elements.splice(
 						lastEntry.elementIndex,
 						0,
@@ -156,7 +165,6 @@ function correct (x, y, isDown) {
 function saveErasingHistory (
 	type,
 	scope,
-	groupIndex,
 	groupValue,
 	elementIndex,
 	elementValue
@@ -165,42 +173,23 @@ function saveErasingHistory (
 	historyEntry.type = type;
 	historyEntry.action = 'removed';
 	historyEntry.scope = scope;
-	historyEntry.groupIndex = groupIndex;
 	historyEntry.groupValue = groupValue;
 	historyEntry.elementIndex = elementIndex;
 	historyEntry.elementValue = elementValue;
 	history.push(historyEntry);
 }
 
-function eraseElement (x, y, elementGroups) {
-	let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroups);
+function eraseElement (x, y, query) {
+	let elementGroupAndElement = MapData.findElementGroupAndElement(x, y, query);
 	if (elementGroupAndElement != null) {
-		let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
-		let elementGroup = elementGroups[elementGroupIndex];
+		let elementGroup = elementGroupAndElement[0];
 		let elementIndex = elementGroup.elements.indexOf(elementGroupAndElement[1]);
 		elementGroup.elements.splice(elementIndex, 1);
-		if (elementGroup.elements.length === 0) {
-			// to deal with empty rivers, quick fix
-			let index = mountainRanges.indexOf(elementGroupAndElement[0]);
-			if (index !== -1) {
-				mountainRanges.splice(index, 1);
-			} else {
-				index = rivers.indexOf(elementGroupAndElement[0]);
-				rivers.splice(index, 1);
-			}
-		}
 		redraw();
-
-		// to redo, quick fix
-		elementGroupIndex = mountainRanges.indexOf(elementGroupAndElement[0]);
-		if (elementGroupIndex === -1) {
-			elementGroupIndex = rivers.indexOf(elementGroupAndElement[0]);
-		}
 
 		saveErasingHistory(
 			elementGroup.elementType,
 			'element',
-			elementGroupIndex,
 			elementGroupAndElement[0],
 			elementIndex,
 			elementGroupAndElement[1]
@@ -208,8 +197,8 @@ function eraseElement (x, y, elementGroups) {
 	}
 }
 
-// function eraseElementGroup (x, y, elementGroups) {
-// 	let elementGroupAndElement = findElementGroupAndElement(x, y, elementGroups);
+// function eraseElementGroup (x, y, query) {
+// 	let elementGroupAndElement = MapData.findElementGroupAndElement(x, y, query);
 // 	if (elementGroupAndElement != null) {
 // 		let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
 // 		elementGroups.splice(elementGroupIndex, 1);
@@ -217,7 +206,6 @@ function eraseElement (x, y, elementGroups) {
 // 		saveErasingHistory(
 // 			elementGroup.elementType,
 // 			'group',
-// 			elementGroupIndex,
 // 			elementGroupAndElement[0]
 // 		);
 // 	}
@@ -232,36 +220,6 @@ export function redraw () {
 function redrawRivers (rivers) {
 	for (let i = 0; i < rivers.length; i++) {
 		rivers[i].draw(ctx);
-	}
-}
-
-function findElementGroupAndElement (x, y, elementGroups) {
-	if (elementGroups.length > 0) {
-		let foundElementGroup = elementGroups.find(function (group) {
-			return group.elements.length > 0;
-		});
-		if (!foundElementGroup) {
-			return null;
-		}
-		let foundElement = foundElementGroup.elements[0];
-		let minDifference =
-			Math.abs(x - foundElement.x) + Math.abs(y - foundElement.y);
-		for (let i = 0; i < elementGroups.length; i++) {
-			let elementGroup = elementGroups[i];
-			let elements = elementGroup.elements;
-			for (let j = 0; j < elements.length; j++) {
-				const difference =
-					Math.abs(x - elements[j].x) + Math.abs(y - elements[j].y);
-				if (difference < minDifference) {
-					minDifference = difference;
-					foundElementGroup = elementGroup;
-					foundElement = elements[j];
-				}
-			}
-		}
-		return [foundElementGroup, foundElement, minDifference];
-	} else {
-		return null;
 	}
 }
 
@@ -298,4 +256,3 @@ function clearArea () {
 	ctx.setTransform(1, 0, 0, 1, 0, 0);
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
-

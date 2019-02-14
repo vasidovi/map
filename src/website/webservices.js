@@ -1,3 +1,4 @@
+import MapData from './MapData.mjs';
 import {
 	MountainRange
 } from './models/MountainRange.mjs';
@@ -11,22 +12,15 @@ import {
 	RiverPart
 } from './models/RiverPart.mjs';
 import {
-	redraw,
-	rivers,
-	mountainRanges
+	redraw
 } from './index.js';
 
 const routes = {
 	map: '/map'
 };
 
-// DEV
-
 export function saveMap () {
-	const data = {
-		mountainRanges,
-		rivers
-	};
+	const data = MapData.data;
 
 	const serializedData = serialize(data);
 
@@ -53,9 +47,10 @@ function loadMap () {
 			const string = JSON.stringify(response);
 
 			var parsed = deserialize(string);
+			const data = MapData.data;
 
-			rivers.push(...parsed.rivers);
-			mountainRanges.push(...parsed.mountainRanges);
+			data.rivers.push(...parsed.rivers);
+			data.mountainRanges.push(...parsed.mountainRanges);
 
 			redraw();
 		},
@@ -89,7 +84,7 @@ function deserialize (string) {
 	return JSON.parse(string, function reviver (key, value) {
 		const Type = types[value.__type];
 		if (Type) {
-			var p = new Type(value.name);
+			var p = new Type();
 			Object.getOwnPropertyNames(value).forEach(function (k) {
 				p[k] = value[k];
 			});
