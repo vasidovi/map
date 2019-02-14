@@ -37,6 +37,11 @@ const data = {
 		name: 'eraser',
 		title: 'Eraser',
 		src: 'https://cdn3.iconfinder.com/data/icons/text/100/eraser-512.png'
+	},
+	{
+		name: 'selector',
+		title: 'Select',
+		src: 'https://cdn2.iconfinder.com/data/icons/dottie-design-part-2/24/design_055-quick_selection-tool-marquee-graphic-512.png'
 	}
 	],
 	setActiveTool: function (tool) {
