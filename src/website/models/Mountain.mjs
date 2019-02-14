@@ -8,15 +8,19 @@ export default class Mountain extends Element {
 		this.size = size;
 	}
 
+	drawImage (ctx, image) {
+		ctx.drawImage(image, this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+	}
+
 	draw (ctx) {
 		Resources.load(this.type, (image) => {
-			ctx.drawImage(image, this.x, this.y, this.size, this.size);
+			this.drawImage(ctx, image);
 		});
 	}
 
 	highlight (ctx) {
 		Resources.load(this.type + '-selected', (image) => {
-			ctx.drawImage(image, this.x, this.y, this.size, this.size);
+			this.drawImage(ctx, image);
 		});
 	}
 }

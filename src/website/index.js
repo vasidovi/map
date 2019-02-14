@@ -54,12 +54,7 @@ function formMountains (x, y, isDown) {
 
 	if (isDown) {
 		if (Math.abs(x - prevX) >= size || Math.abs(y - prevY) >= size) {
-			const mountain = new Mountain(
-				x - size / 2,
-				y - size / 2,
-				size,
-				'mountain'
-			);
+			const mountain = new Mountain(x, y, size, 'mountain');
 			mountain.draw(ctx1);
 			mountainRanges.last().elements.push(mountain);
 			prevX = x;
@@ -67,6 +62,10 @@ function formMountains (x, y, isDown) {
 		}
 	} else {
 		mountainRanges.push(new MountainRange());
+		const mountain = new Mountain(x, y, size, 'mountain');
+		mountain.draw(ctx1);
+		mountainRanges.last().elements.push(mountain);
+
 		const historyEntry = {};
 		historyEntry.action = 'added';
 		historyEntry.type = 'mountainRange';

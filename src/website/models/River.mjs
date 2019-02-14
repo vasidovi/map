@@ -20,7 +20,7 @@ export default class River extends ElementGroup {
 		ctx.lineJoin = 'round';
 		ctx.beginPath();
 		ctx.moveTo(this.elements[0].x, this.elements[0].y);
-		for (let i = 1; i < this.elements.length - 1; i++) {
+		for (let i = 1; i < this.elements.length; i++) {
 			const nextX = this.elements[i].x;
 			const nextY = this.elements[i].y;
 			ctx.lineTo(nextX, nextY);
