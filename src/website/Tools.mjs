@@ -58,13 +58,23 @@ export default class Tools {
 		} else {
 			console.log('No active tool has been set');
 		}
-
 		ctx1.restore();
 	}
 
-	static markSelected (x, y, isDown) {
+	 static getContextMenu () {
+		 ctx1.save();
+		 if (activeTool.ctxMenu) {
+			 alert('trying to load context menu');
+			 $('.context-menu').css('display', 'block');
+		 } else {
+			console.log('No active tool has been set');
+		 }
+		 ctx1.restore();
+	 }
+
+	static markSelected (x, y, mouseLeftBtnNotPressed) {
 		const nearestObject = MapData.findElementGroupAndElement(x, y)[1];
-		if (isDown) {
+		if (mouseLeftBtnNotPressed) {
 			Canvas.clearArea(ctx2);
 			if (fixedObject) {
 				fixedObject.highlight(ctx2);
@@ -77,6 +87,16 @@ export default class Tools {
 				fixedObject = null;
 				Canvas.clearArea(ctx2);
 			}
+		}
+	}
+
+	static markToBeErased (x, y, mouseLeftBtnNotPressed) {
+		const nearestObject = MapData.findElementGroupAndElement(x, y)[1];
+		if (mouseLeftBtnNotPressed) {
+			Canvas.clearArea(ctx2);
+			nearestObject.highlight(ctx2);
+		} else {
+			Tools.eraseElement(x, y);
 		}
 	}
 
@@ -197,11 +217,13 @@ const tools = {
 		action: Tools.correct
 	},
 	eraser: {
-		action: Tools.eraseElement
-		// callOnMouseMove: true
+		// action: Tools.eraseElement
+		action: Tools.markToBeErased,
+		callOnMouseMove: true
 	},
 	selector: {
 		action: Tools.markSelected,
-		callOnMouseMove: true
+		callOnMouseMove: true,
+		ctxMenu: true
 	}
 };

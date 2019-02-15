@@ -1,10 +1,12 @@
 import Tools from './Tools.mjs';
+import ContextMenu from './ContextMenu.mjs';
 
 let mousePressed = false;
 const layer = $('#layer2');
 
 layer.mousedown(function (e) {
 	mousePressed = true;
+	if (ContextMenu.menuVisible)ContextMenu.toggleMenu('hide');
 	Tools.useTool(
 		e.pageX - $(this).offset().left,
 		e.pageY - $(this).offset().top,
@@ -28,4 +30,10 @@ layer.mouseup(function (e) {
 
 layer.mouseleave(function (e) {
 	mousePressed = false;
+});
+
+layer.contextmenu(function (e) {
+	e.preventDefault();
+	ContextMenu.setPosition(e.pageX, e.pageY);
+	return false;
 });
