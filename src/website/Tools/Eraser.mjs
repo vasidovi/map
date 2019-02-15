@@ -34,11 +34,11 @@ export default class Eraser extends Tool {
 			Canvas.clearArea(selectCtx);
 			nearestObject.highlight(selectCtx);
 		} else {
-			this.eraseElement(x, y);
+			Eraser.eraseElement(x, y);
 		}
 	}
 
-	eraseElement (x, y) {
+	static	eraseElement (x, y) {
 		let elementGroupAndElement = MapData.findElementGroupAndElement(x, y);
 		if (elementGroupAndElement != null) {
 			let elementGroup = elementGroupAndElement[0];

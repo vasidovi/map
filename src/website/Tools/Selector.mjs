@@ -11,8 +11,8 @@ export default class Selector extends Tool {
 		super();
 		this.callOnMouseMove = true;
 		this.ctxMenu = {
-			'Delete selected': this.eraseSelectedElement,
-			'Deselect': this.deselect
+			'Delete selected': Selector.eraseSelectedElement,
+			'Deselect': Selector.deselect
 		};
 	}
 
@@ -23,7 +23,8 @@ export default class Selector extends Tool {
 
 	static eraseSelectedElement () {
 		if (fixedObject != null) {
-			Eraser.eraseElemenet(fixedObject.x, fixedObject.y);
+			Eraser.eraseElement(fixedObject.x, fixedObject.y);
+			fixedObject = null;
 		} else {
 			console.log('no object selected');
 		}
@@ -38,6 +39,8 @@ export default class Selector extends Tool {
 			}
 			nearestObject.highlight(selectCtx);
 		} else {
+			console.log('x ' + fixedObject);
+			console.log('y ' + fixedObject);
 			if (nearestObject !== fixedObject) {
 				fixedObject = nearestObject;
 			} else {

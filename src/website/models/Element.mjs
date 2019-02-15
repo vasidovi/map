@@ -7,4 +7,10 @@ export default class Element {
 	draw () {
 		console.log('drawing element');
 	}
+	highlight () {
+		console.log('highlight element');
+	}
+	select () {
+		console.log('select element');
+	}
 }

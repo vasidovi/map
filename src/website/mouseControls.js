@@ -5,6 +5,9 @@ let mousePressed = false;
 const layer = $('#layer2');
 
 layer.mousedown(function (e) {
+	if (e.which !== 1) {
+		return;
+	}
 	mousePressed = true;
 	if (ContextMenu.menuVisible)ContextMenu.toggleMenu('hide');
 	Tools.useTool(

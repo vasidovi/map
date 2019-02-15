@@ -1,6 +1,3 @@
-import Canvas from './Canvas.mjs';
-import Tools from './Tools/Tools.mjs';
-
 const menuOptions = $('#menu-options');
 const menu = document.querySelector('#context-menu');
 
@@ -28,25 +25,15 @@ export default class ContextMenu {
 
 	static setMenuOptions (options) {
 		menuOptions.empty();
-		var li = [];
 		if (options) {
 			const keys = Object.keys(options);
 			keys.forEach(key => {
-				li.push('<li class="menu option">' + key + '</li>');
-				// menuOptions.append($('li').text(key));
+				const child = $('<li>').text(key).addClass('menu-option');
+				menuOptions.append(child);
+				child.click(options[key]);
 			});
-			menuOptions.append(li.join(''));
-		}
-	}
-
-	static getContextMenu () {
-		Canvas.mainCtx.save();
-		if (Tools.activeTool.ctxMenu) {
-			alert('trying to load context menu');
-			$('.context-menu').css('display', 'block');
 		} else {
-			console.log('No active tool has been set');
+			if (ContextMenu.menuVisible) ContextMenu.toggleMenu('hide');
 		}
-		Canvas.mainCtx.restore();
 	}
 }
