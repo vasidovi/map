@@ -36,12 +36,14 @@ function saveErasingHistory (
 	History.history.push(historyEntry);
 }
 
+let fixedObject;
+
 export default class Tools {
 	static get activeTool () {
 		return activeTool;
 	}
 
-	static set activeTool (toolName) {
+	static setActiveTool (toolName) {
 		activeTool = tools[toolName];
 		if (!activeTool) {
 			console.log(`Couldn't find tool by name '${toolName}'`);
@@ -61,9 +63,21 @@ export default class Tools {
 	}
 
 	static markSelected (x, y, isDown) {
-		Canvas.clearArea(ctx2);
 		const nearestObject = MapData.findElementGroupAndElement(x, y)[1];
-		nearestObject.highlight(ctx2);
+		if (isDown) {
+			Canvas.clearArea(ctx2);
+			if (fixedObject) {
+				fixedObject.highlight(ctx2);
+			}
+			nearestObject.highlight(ctx2);
+		} else {
+			if (nearestObject !== fixedObject) {
+				fixedObject = nearestObject;
+			} else {
+				fixedObject = null;
+				Canvas.clearArea(ctx2);
+			}
+		}
 	}
 
 	static formMountains (x, y, isDown) {
@@ -184,6 +198,7 @@ const tools = {
 	},
 	eraser: {
 		action: Tools.eraseElement
+		// callOnMouseMove: true
 	},
 	selector: {
 		action: Tools.markSelected,

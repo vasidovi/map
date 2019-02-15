@@ -49,11 +49,11 @@ const data = {
 				e.isActive = false;
 			});
 			tool.isActive = true;
-			Tools.activeTool = tool.name;
+			Tools.setActiveTool(tool.name);
 		}
 	}
 };
-data.setActiveTool(data.tools.find(e => e.name === 'rivers'));
+data.setActiveTool(data.tools.find(e => e.name === 'selector'));
 
 const app = new Vue({
 	el: '#tools',
