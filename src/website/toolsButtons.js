@@ -3,6 +3,7 @@ import History from './History.mjs';
 import Tools from './Tools.mjs';
 import {
 	saveMap } from './webservices.mjs';
+import ContextMenu from './ContextMenu.mjs';
 
 const data = {
 	tools: [{
@@ -50,6 +51,7 @@ const data = {
 			});
 			tool.isActive = true;
 			Tools.setActiveTool(tool.name);
+			ContextMenu.setMenuOptions(Tools.activeTool.ctxMenu);
 		}
 	}
 };

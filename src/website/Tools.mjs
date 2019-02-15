@@ -61,16 +61,16 @@ export default class Tools {
 		ctx1.restore();
 	}
 
-	 static getContextMenu () {
-		 ctx1.save();
-		 if (activeTool.ctxMenu) {
-			 alert('trying to load context menu');
-			 $('.context-menu').css('display', 'block');
-		 } else {
-			console.log('No active tool has been set');
-		 }
-		 ctx1.restore();
-	 }
+	//  static getContextMenu () {
+	// 	 ctx1.save();
+	// 	 if (activeTool.ctxMenu) {
+	// 		 alert('trying to load context menu');
+	// 		 $('.context-menu').css('display', 'block');
+	// 	 } else {
+	// 		console.log('No active tool has been set');
+	// 	 }
+	// 	 ctx1.restore();
+	//  }
 
 	static markSelected (x, y, mouseLeftBtnNotPressed) {
 		const nearestObject = MapData.findElementGroupAndElement(x, y)[1];
@@ -84,12 +84,22 @@ export default class Tools {
 			if (nearestObject !== fixedObject) {
 				fixedObject = nearestObject;
 			} else {
-				fixedObject = null;
-				Canvas.clearArea(ctx2);
+				this.deselect();
 			}
 		}
 	}
+	static deselect () {
+		fixedObject = null;
+		Canvas.clearArea(ctx2);
+	}
 
+	static eraseSelectedElement () {
+		if (fixedObject != null) {
+			this.eraseElemenet(fixedObject.x, fixedObject.y);
+		} else {
+			console.log('no object selected');
+		}
+	}
 	static markToBeErased (x, y, mouseLeftBtnNotPressed) {
 		const nearestObject = MapData.findElementGroupAndElement(x, y)[1];
 		if (mouseLeftBtnNotPressed) {
@@ -224,6 +234,9 @@ const tools = {
 	selector: {
 		action: Tools.markSelected,
 		callOnMouseMove: true,
-		ctxMenu: true
+		ctxMenu: {
+			'Delete selected': Tools.eraseSelectedElement,
+			'Deselect': Tools.deselect
+		}
 	}
 };

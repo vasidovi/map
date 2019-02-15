@@ -35,7 +35,7 @@ body {
   z-index: 10;
 }
 
-.context-menu{
+#context-menu{
   width: 120px;
   background-color: aliceblue;
   box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
@@ -44,19 +44,19 @@ body {
   display: none;
 }
 
-.context-menu .menu-options {
+#menu-options {
     list-style: none;
     padding: 10px 0;
 }
 
-.context-menu .menu-option {
+#menu-options .menu-option {
       font-weight: 500;
       font-size: 14px;
       padding: 10px 40px 10px 20px;
       cursor: pointer;
 }
 
-.context-menu .menu-option:hover {
+#menu-options .menu-option:hover {
         background: rgba(0, 0, 0, 0.2);
 }
 
