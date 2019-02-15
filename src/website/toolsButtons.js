@@ -1,6 +1,6 @@
 // import Vue from 'vue';
 import History from './History.mjs';
-import Tools from './Tools.mjs';
+import Tools from './Tools/Tools.mjs';
 import {
 	saveMap } from './webservices.mjs';
 import ContextMenu from './ContextMenu.mjs';

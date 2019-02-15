@@ -1,5 +1,9 @@
-const menu = document.querySelector('#context-menu');
+import Canvas from './Canvas.mjs';
+import Tools from './Tools/Tools.mjs';
+
 const menuOptions = $('#menu-options');
+const menu = document.querySelector('#context-menu');
+
 let menuVisible = false;
 
 export default class ContextMenu {
@@ -23,7 +27,7 @@ export default class ContextMenu {
 	}
 
 	static setMenuOptions (options) {
-	  menuOptions.empty();
+		menuOptions.empty();
 		var li = [];
 		if (options) {
 			const keys = Object.keys(options);
@@ -33,5 +37,16 @@ export default class ContextMenu {
 			});
 			menuOptions.append(li.join(''));
 		}
+	}
+
+	static getContextMenu () {
+		Canvas.mainCtx.save();
+		if (Tools.activeTool.ctxMenu) {
+			alert('trying to load context menu');
+			$('.context-menu').css('display', 'block');
+		} else {
+			console.log('No active tool has been set');
+		}
+		Canvas.mainCtx.restore();
 	}
 }
