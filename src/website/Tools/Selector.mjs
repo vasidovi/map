@@ -39,8 +39,6 @@ export default class Selector extends Tool {
 			}
 			nearestObject.highlight(selectCtx);
 		} else {
-			console.log('x ' + fixedObject);
-			console.log('y ' + fixedObject);
 			if (nearestObject !== fixedObject) {
 				fixedObject = nearestObject;
 			} else {
