@@ -8,7 +8,7 @@ import Canvas from './Canvas.mjs';
 
 var lastX, lastY;
 
-const activeTool = {};
+let activeTool = {};
 
 let rivers = MapData.data.rivers;
 let mountainRanges = MapData.data.mountainRanges;
@@ -41,22 +41,20 @@ export default class Tools {
 		return activeTool;
 	}
 
+	static set activeTool (toolName) {
+		activeTool = tools[toolName];
+		if (!activeTool) {
+			console.log(`Couldn't find tool by name '${toolName}'`);
+		}
+	}
+
 	static useTool (x, y, isDown) {
 		ctx1.save();
 
-		const tools = {
-			mountains: this.formMountains,
-			rivers: this.formRivers,
-			corrector: this.correct,
-			eraser: this.eraseElement,
-			selector: this.markSelected
-		};
-
-		const tool = tools[activeTool.name];
-		if (tool) {
-			tool(x, y, isDown);
+		if (activeTool) {
+			activeTool.action(x, y, isDown);
 		} else {
-			console.log(`Couldn't process tool '${activeTool.name}'`);
+			console.log('No active tool has been set');
 		}
 
 		ctx1.restore();
@@ -124,7 +122,7 @@ export default class Tools {
 		lastY = y;
 	}
 
-	static	correct (x, y, isDown) {
+	static correct (x, y, isDown) {
 		const size = 20;
 
 		if (isDown) {
@@ -141,7 +139,7 @@ export default class Tools {
 		lastY = y;
 	}
 
-	static	eraseElement (x, y) {
+	static eraseElement (x, y) {
 		let elementGroupAndElement = MapData.findElementGroupAndElement(x, y);
 		if (elementGroupAndElement != null) {
 			let elementGroup = elementGroupAndElement[0];
@@ -159,17 +157,36 @@ export default class Tools {
 		}
 	}
 
-// static eraseElementGroup (x, y) {
-// 	let elementGroupAndElement = MapData.findElementGroupAndElement(x, y);
-// 	if (elementGroupAndElement != null) {
-// 		let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
-// 		elementGroups.splice(elementGroupIndex, 1);
-// 		redraw();
-// 		saveErasingHistory(
-// 			elementGroup.elementType,
-// 			'group',
-// 			elementGroupAndElement[0]
-// 		);
-// 	}
-// }
+	// static eraseElementGroup (x, y) {
+	// 	let elementGroupAndElement = MapData.findElementGroupAndElement(x, y);
+	// 	if (elementGroupAndElement != null) {
+	// 		let elementGroupIndex = elementGroups.indexOf(elementGroupAndElement[0]);
+	// 		elementGroups.splice(elementGroupIndex, 1);
+	// 		redraw();
+	// 		saveErasingHistory(
+	// 			elementGroup.elementType,
+	// 			'group',
+	// 			elementGroupAndElement[0]
+	// 		);
+	// 	}
+	// }
 }
+
+const tools = {
+	mountains: {
+		action: Tools.formMountains
+	},
+	rivers: {
+		action: Tools.formRivers
+	},
+	corrector: {
+		action: Tools.correct
+	},
+	eraser: {
+		action: Tools.eraseElement
+	},
+	selector: {
+		action: Tools.markSelected,
+		callOnMouseMove: true
+	}
+};

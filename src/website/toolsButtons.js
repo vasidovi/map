@@ -49,7 +49,7 @@ const data = {
 				e.isActive = false;
 			});
 			tool.isActive = true;
-			Tools.activeTool.name = tool.name;
+			Tools.activeTool = tool.name;
 		}
 	}
 };

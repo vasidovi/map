@@ -13,7 +13,7 @@ layer.mousedown(function (e) {
 });
 
 layer.mousemove(function (e) {
-	if (mousePressed) {
+	if (mousePressed || Tools.activeTool.callOnMouseMove) {
 		Tools.useTool(
 			e.pageX - $(this).offset().left,
 			e.pageY - $(this).offset().top,
