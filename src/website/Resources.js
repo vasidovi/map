@@ -4,8 +4,11 @@ const sources = {
 };
 
 const colors = {
-	selected: {
+	highlighted: {
 		b: 255
+	},
+	selected: {
+		g: 255
 	}
 };
 

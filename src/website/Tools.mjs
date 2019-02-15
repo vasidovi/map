@@ -61,23 +61,23 @@ export default class Tools {
 		ctx1.restore();
 	}
 
-	 static getContextMenu () {
-		 ctx1.save();
-		 if (activeTool.ctxMenu) {
-			 alert('trying to load context menu');
-			 $('.context-menu').css('display', 'block');
-		 } else {
+	static getContextMenu () {
+		ctx1.save();
+		if (activeTool.ctxMenu) {
+			alert('trying to load context menu');
+			$('.context-menu').css('display', 'block');
+		} else {
 			console.log('No active tool has been set');
-		 }
-		 ctx1.restore();
-	 }
+		}
+		ctx1.restore();
+	}
 
 	static markSelected (x, y, mouseLeftBtnNotPressed) {
 		const nearestObject = MapData.findElementGroupAndElement(x, y)[1];
 		if (mouseLeftBtnNotPressed) {
 			Canvas.clearArea(ctx2);
 			if (fixedObject) {
-				fixedObject.highlight(ctx2);
+				fixedObject.select(ctx2);
 			}
 			nearestObject.highlight(ctx2);
 		} else {
